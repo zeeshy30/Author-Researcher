@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { StyleSheet, TextInput, } from 'react-native';
 import { colors, fontSizes } from '../BaseStyles';
 
 // Form.propTypes = {
@@ -20,7 +18,9 @@ export default Form = React.forwardRef((props, ref) => {
             placeholderTextColor={colors.inputText}
             secureTextEntry={props.secureTextEntry}
             selectionColor="#fff"
+            keyboardType={props.placeholder === "Email" ? "email-address" : "default"}
             onSubmitEditing={props.onSubmitEditing}
+            value={props.value}
             ref={ref}
         />
     )

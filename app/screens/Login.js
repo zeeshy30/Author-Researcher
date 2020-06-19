@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
+import firebase from 'react-native-firebase';
 
 import { colors, fontSizes } from '../BaseStyles';
 import Form from '../components/Form';
@@ -17,6 +18,10 @@ export default class Login extends Component {
         }
     }
 
+    componentDidMount() {
+        this.email.focus();
+    }
+
     setEmail = val => {
         this.setState({ email: val });
     }
@@ -30,7 +35,22 @@ export default class Login extends Component {
     }
 
     Login = () => {
+        if (this.state.email === '' || this.state.password === '') {
+            Alert.alert('Enter details to signin!')
+            return;
+        }
 
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then((res) => {
+                alert('User logged-in successfully!');
+                this.setState({
+                    email: '',
+                    password: ''
+                });
+            })
+            .catch(error => alert(error));
     }
 
     render() {
@@ -43,12 +63,15 @@ export default class Login extends Component {
                         placeholder="Email"
                         onUpdate={this.setEmail}
                         onSubmitEditing={() => this.password.focus()}
+                        ref={(input) => this.email = input}
+                        value={this.state.email}
                     />
                     <Form
                         placeholder="Password"
                         secureTextEntry={true}
                         onUpdate={this.setPassword}
                         ref={(input) => this.password = input}
+                        value={this.state.password}
                     />
                 </View>
                 <Button onPress={this.Login} text="Login" />

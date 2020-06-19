@@ -5,7 +5,7 @@ import {
     View,
     TouchableOpacity
 } from 'react-native';
-
+import firebase from 'react-native-firebase';
 import Form from '../components/Form';
 import Button from '../components/Button';
 
@@ -19,15 +19,20 @@ export default class Signup extends Component {
             fullName: '',
             email: '',
             password: '',
+            confirmPassword: '',
         }
     }
 
+    componentDidMount() {
+        this.fullName.focus();
+    }
+
     goBack() {
-        Actions.pop()
+        Actions.pop();
     }
 
     setName = val => {
-        this.setState({ fullName: val })
+        this.setState({ fullName: val });
     }
 
     setEmail = val => {
@@ -38,8 +43,42 @@ export default class Signup extends Component {
         this.setState({ password: val });
     }
 
-    SignUp = () => {
+    setConfirmPassword = val => {
+        this.setState({ confirmPassword: val });
+    }
 
+    SignUp = () => {
+        const {
+            fullName,
+            email,
+            password,
+            confirmPassword,
+        } = this.state;
+
+        if (password !== confirmPassword) {
+            alert("Passwords don't match.");
+            return;
+        } else if (fullName === "" || email === "" || password === "" || confirmPassword === ""){
+            alert("Please fill all the fields.");
+            return;
+        }
+
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then(res => {
+                res.user.updateProfile({
+                    displayName: fullName
+                });
+                this.setState({
+                    fullName: "",
+                    email: "",
+                    password: "",
+                    confirmPassword: "",
+                });
+                alert('registered');
+            })
+            .catch(error => alert(error));
     }
 
     render() {
@@ -52,21 +91,33 @@ export default class Signup extends Component {
                         placeholder="Full Name"
                         onUpdate={this.setName}
                         onSubmitEditing={() => this.email.focus()}
+                        ref={(input) => this.fullName = input}
+                        value={this.state.fullName}
                     />
                     <Form
                         placeholder="Email"
                         onUpdate={this.setEmail}
                         onSubmitEditing={() => this.password.focus()}
                         ref={(input) => this.email = input}
+                        value={this.state.email}
                     />
                     <Form
                         placeholder="Password"
                         secureTextEntry={true}
                         onUpdate={this.setPassword}
+                        onSubmitEditing={() => this.confirmPassword.focus()}
                         ref={(input) => this.password = input}
+                        value={this.state.password}
+                    />
+                    <Form
+                        placeholder="Confirm Password"
+                        secureTextEntry={true}
+                        onUpdate={this.setConfirmPassword}
+                        ref={(input) => this.confirmPassword = input}
+                        value={this.state.confirmPassword}
                     />
                 </View>
-                <Button onPress={this.SignUp} text="Sign up"/>
+                <Button onPress={this.SignUp} text="Sign up" />
                 <View style={styles.signupTextCont}>
                     <Text style={styles.signupText}>Already have an account? </Text>
                     <TouchableOpacity onPress={this.goBack}><Text style={styles.signupButton}>Sign in</Text></TouchableOpacity>
