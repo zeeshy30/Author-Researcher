@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage'
 
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
@@ -18,10 +19,6 @@ export default class Login extends Component {
         }
     }
 
-    componentDidMount() {
-        this.email.focus();
-    }
-
     setEmail = val => {
         this.setState({ email: val });
     }
@@ -36,19 +33,16 @@ export default class Login extends Component {
 
     Login = () => {
         if (this.state.email === '' || this.state.password === '') {
-            Alert.alert('Enter details to signin!')
+            Alert.alert('Enter details to Login!')
             return;
         }
 
         firebase
             .auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
-            .then((res) => {
-                alert('User logged-in successfully!');
-                this.setState({
-                    email: '',
-                    password: ''
-                });
+            .then(res => {
+                AsyncStorage.setItem('loginDetails', JSON.stringify(res));
+                Actions.dashboard();
             })
             .catch(error => alert(error));
     }
