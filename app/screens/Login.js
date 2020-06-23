@@ -33,6 +33,9 @@ export default class Login extends Component {
     signup() {
         Actions.signup()
     }
+    search() {
+        Actions.main()
+    }
 
     Login = () => {
         if (this.state.email === '' || this.state.password === '') {
@@ -45,6 +48,7 @@ export default class Login extends Component {
             .signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((res) => {
                 alert('User logged-in successfully!');
+                this.search;
                 this.setState({
                     email: '',
                     password: ''
@@ -74,7 +78,7 @@ export default class Login extends Component {
                         value={this.state.password}
                     />
                 </View>
-                <Button onPress={this.Login} text="Login" />
+                <Button onPress={this.search} text="Login" />
 
                 <View style={styles.signupTextCont}>
                     <Text style={styles.signupText}>Dont have an account yet? </Text>

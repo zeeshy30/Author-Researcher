@@ -5,4 +5,5 @@ export const colors = {
 
 export const fontSizes = {
     normal: 16,
+    large: 26,
 }
