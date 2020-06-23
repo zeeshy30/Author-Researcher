@@ -23,10 +23,6 @@ export default class Signup extends Component {
         }
     }
 
-    componentDidMount() {
-        this.fullName.focus();
-    }
-
     goBack() {
         Actions.pop();
     }
@@ -70,13 +66,7 @@ export default class Signup extends Component {
                 res.user.updateProfile({
                     displayName: fullName
                 });
-                this.setState({
-                    fullName: "",
-                    email: "",
-                    password: "",
-                    confirmPassword: "",
-                });
-                alert('registered');
+                this.goBack();
             })
             .catch(error => alert(error));
     }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ActivityIndicator, StyleSheet, View,Text } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import firebase from 'react-native-firebase';
 import { Actions } from 'react-native-router-flux';
 
@@ -21,7 +21,6 @@ export default class InitialScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>Hello</Text>
                 <ActivityIndicator size="large" color={colors.button} />
             </View>
         );
