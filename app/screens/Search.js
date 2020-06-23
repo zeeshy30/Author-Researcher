@@ -1,11 +1,15 @@
-import React, { useState, Component } from 'react';
+import React from 'react';
 import { SearchBar } from 'react-native-elements';
 import { Text, View, StyleSheet } from 'react-native';
-import { Image } from 'react-native'
+import { colors, fontSizes } from '../BaseStyles';
+
 export default class Search extends React.Component {
-    state = {
-        search: '',
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            search: '',
+        }
+    }
 
     updateSearch = (search) => {
         this.setState({ search });
@@ -16,21 +20,17 @@ export default class Search extends React.Component {
         return (
 
             <View style={styles.container}>
-
-                <Text style={styles.title}>Author Search</Text>
                 <SearchBar
-                    placeholder="Type Here..."
+                    placeholder="Search"
                     onChangeText={this.updateSearch}
                     value={search}
-                    fontColor="#c6c6c6"
-                    iconColor="#c6c6c6"
-                    shadowColor="#282828"
-                    cancelIconColor="#c6c6c6"
-                    backgroundColor="#353d5e"
+                    fontColor={colors.inputText}
+                    lightTheme
                     containerStyle={{
-                        backgroundColor: 'white', borderWidth: 1, borderRadius: 5,
+                        backgroundColor: 'white',
+                        padding: 0,
+                        width: '100%',
 
-                        width: 400,
                     }}
 
                 />
@@ -43,26 +43,14 @@ const styles = StyleSheet.create({
     container:
     {
         flex: 1,
-        backgroundColor: '#353d5e',
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingTop: 50,
-        paddingHorizontal: 20,
-    },
-    title: {
-        color: '#000',
-        fontSize: 32,
-        fontWeight: '700',
-        textAlign: 'center',
-        marginBottom: 20
     },
     searchbox: {
-        color: '#000',
-        fontSize: 20,
+        fontSize: fontSizes.normal,
         fontWeight: '300',
-        padding: 20,
         width: '100%',
-        backgroundColor: '#fff',
         borderRadius: 8,
         marginBottom: 40
     }

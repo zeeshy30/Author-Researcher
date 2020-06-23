@@ -5,12 +5,11 @@ import firebase from 'react-native-firebase';
 
 import Login from './screens/Login';
 import Signup from './screens/Signup';
-import Search from './screens/Search';
 import Main from './screens/Main';
 import InitialScreen from './screens/InitialScreen';
-
 import Dashboard from './screens/Dashboard';
-import ResearcherDashboard from './screens/ResearcherDashboard';
+import Search from './screens/Search';
+
 import { fontSizes } from './BaseStyles';
 
 export default Routes = () => {
@@ -39,9 +38,8 @@ export default Routes = () => {
                 <Scene key="login" component={Login} title="Login" type="replace" />
                 <Scene key="dashboard" component={Dashboard} title="Dashboard" type="replace" renderRightButton={signoutButton} />
                 <Scene key="signup" component={Signup} title="Sign up" />
-                <Scene key="researcherdashboard" component={ResearcherDashboard} title="Researcher Dashboard" />
-                <Scene key="search" component={Search} title="Searchbar" />
-                <Scene key="main" component={Main} title="main" />
+                <Scene key="search" component={Search} title="Search" />
+                <Scene key="main" component={Main} title="Main" />
 
 
             </Stack>

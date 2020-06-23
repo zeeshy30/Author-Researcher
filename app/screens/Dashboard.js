@@ -16,7 +16,7 @@ export default Dashboard = () => {
 
             <TouchableOpacity
                 style={styles.ResearcherButton}
-                onPress={() => Actions.main()}
+                onPress={() => Actions.search()}
             >
                 <Text style={styles.signupButton}>Researcher</Text>
             </TouchableOpacity>

@@ -30,9 +30,6 @@ export default class Login extends Component {
     signup() {
         Actions.signup()
     }
-    search() {
-        Actions.main()
-    }
 
     Login = () => {
         if (this.state.email === '' || this.state.password === '') {
@@ -71,7 +68,7 @@ export default class Login extends Component {
                         value={this.state.password}
                     />
                 </View>
-                <Button onPress={this.search} text="Login" />
+                <Button onPress={this.Login} text="Login" />
 
                 <View style={styles.signupTextCont}>
                     <Text style={styles.signupText}>Dont have an account yet? </Text>
