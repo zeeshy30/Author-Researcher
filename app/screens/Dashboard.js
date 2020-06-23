@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 import { colors, fontSizes } from '../BaseStyles';
 
@@ -12,9 +13,10 @@ export default Dashboard = () => {
             >
                 <Text style={styles.signupButton}>Author</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
                 style={styles.ResearcherButton}
-                onPress={() => alert('Cannot press this one')}
+                onPress={() => Actions.main()}
             >
                 <Text style={styles.signupButton}>Researcher</Text>
             </TouchableOpacity>
