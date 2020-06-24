@@ -9,7 +9,7 @@ export default Dashboard = () => {
         <View style={styles.container}>
             <TouchableOpacity
                 style={styles.AuthorButton}
-                onPress={() => alert('Cannot press this one')}
+                onPress={() => Actions.authorcontrolpanel()}
             >
                 <Text style={styles.signupButton}>Author</Text>
             </TouchableOpacity>

@@ -5,7 +5,7 @@ import firebase from 'react-native-firebase';
 
 import Login from './screens/Login';
 import Signup from './screens/Signup';
-import Main from './screens/Main';
+import AuthorDashboard from './screens/AuthorDashboard';
 import InitialScreen from './screens/InitialScreen';
 import Dashboard from './screens/Dashboard';
 import Search from './screens/Search';
@@ -19,7 +19,6 @@ export default Routes = () => {
         Actions.login();
     };
 
-
     const signoutButton = (
         <View>
             <TouchableOpacity style={{ marginRight: 10 }}>
@@ -27,6 +26,7 @@ export default Routes = () => {
             </TouchableOpacity>
         </View>
     );
+
     return (
         <Router barButtonIconStyle={styles.barButtonIconStyle}
             hideNavBar={false}
@@ -39,7 +39,7 @@ export default Routes = () => {
                 <Scene key="dashboard" component={Dashboard} title="Dashboard" type="replace" renderRightButton={signoutButton} />
                 <Scene key="signup" component={Signup} title="Sign up" />
                 <Scene key="search" component={Search} title="Search" />
-                <Scene key="main" component={Main} title="Main" />
+                <Scene key="authorcontrolpanel" component={AuthorDashboard} title="Control Panel" hideNavBar />
 
 
             </Stack>
