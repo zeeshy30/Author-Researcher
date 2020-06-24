@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import { Stylesheet, View, TouchableOpacity, Text } from 'react-native';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux';
-import { View, TouchableOpacity, Text } from 'react-native';
 import firebase from 'react-native-firebase';
 
 import Login from './screens/Login';
 import Signup from './screens/Signup';
-import Dashboard from './screens/Dashboard';
+import AuthorDashboard from './screens/AuthorDashboard';
 import InitialScreen from './screens/InitialScreen';
+import Dashboard from './screens/Dashboard';
+import Search from './screens/Search';
+
 import { fontSizes } from './BaseStyles';
 
 export default Routes = () => {
@@ -15,7 +18,6 @@ export default Routes = () => {
         firebase.auth().signOut();
         Actions.login();
     };
-
 
     const signoutButton = (
         <View>
@@ -36,10 +38,14 @@ export default Routes = () => {
                 <Scene key="login" component={Login} title="Login" type="replace" />
                 <Scene key="dashboard" component={Dashboard} title="Dashboard" type="replace" renderRightButton={signoutButton} />
                 <Scene key="signup" component={Signup} title="Sign up" />
+                <Scene key="search" component={Search} title="Search" />
+                <Scene key="authorcontrolpanel" component={AuthorDashboard} title="Control Panel" hideNavBar />
+
+
             </Stack>
         </Router>
-    );
-}
+    )
+};
 
 const styles = {
     barButtonIconStyle: {
