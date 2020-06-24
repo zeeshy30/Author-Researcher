@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
-import Menu from './Menu';
+import Menu from '../../components/Menu';
 
 export default Profile = ({ navigation }) => {
     return (
