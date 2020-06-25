@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchBar } from 'react-native-elements';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet,Image } from 'react-native';
 import { colors, fontSizes } from '../BaseStyles';
 
 export default class Search extends React.Component {
@@ -20,6 +20,9 @@ export default class Search extends React.Component {
         return (
 
             <View style={styles.container}>
+                <Text>{'\n'}</Text>
+                <Image source={require('../logo.png')} />
+                <Text>{'\n'}</Text>
                 <SearchBar
                     placeholder="Search"
                     onChangeText={this.updateSearch}
@@ -29,7 +32,7 @@ export default class Search extends React.Component {
                     containerStyle={{
                         backgroundColor: 'white',
                         padding: 0,
-                        width: '100%',
+                        width: '90%',
 
                     }}
 

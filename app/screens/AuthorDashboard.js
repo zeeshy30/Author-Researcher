@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Profile from './Author/Profile';
 import Statistics from './Author/Statistics';
 import AddReference from './Author/AddReference';
+import AddQuote from './Author/AddQuote';
 import Chat from './Author/Chat';
 
 function CustomDrawerContent(props) {
@@ -63,6 +64,14 @@ function CustomDrawerContent(props) {
                 label="Add Reference"
                 onPress={() => { navigate('AddReference') }} />
             <DrawerItem icon={({ color, size }) => (
+                <Icon name="playlist-edit"
+                    color={color}
+                    size={size}
+                />
+            )}
+                label="Add Quote"
+                onPress={() => { navigate('AddQuote') }} />
+            <DrawerItem icon={({ color, size }) => (
                 <Icon name="chat"
                     color={color}
                     size={size}
@@ -82,6 +91,7 @@ function MyDrawer() {
             <Drawer.Screen name="Profile" component={Profile} />
             <Drawer.Screen name="Statistics" component={Statistics} />
             <Drawer.Screen name="AddReference" component={AddReference} />
+            <Drawer.Screen name="AddQuote" component={AddQuote} />
             <Drawer.Screen name="Chat" component={Chat} />
         </Drawer.Navigator>
     );

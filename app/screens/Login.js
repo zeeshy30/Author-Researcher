@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage'
 
 import { Actions } from 'react-native-router-flux';
@@ -50,6 +50,9 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
+                 <Text>{'\n'}</Text>
+                <Text>{'\n'}</Text>
+                <Image source={require('../logo.png')} />
                 <Text>{'\n'}</Text>
                 <Text>{'\n'}</Text>
                 <View style={styles.formContainer}>

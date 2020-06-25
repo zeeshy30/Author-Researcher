@@ -3,14 +3,16 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    ScrollView,Picker
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import Form from '../components/Form';
 import Button from '../components/Button';
-
+import RadioGroup from 'react-native-radio-buttons-group';
 import { colors, fontSizes } from '../BaseStyles';
 import { Actions } from 'react-native-router-flux';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default class Signup extends Component {
     constructor(props) {
@@ -20,6 +22,12 @@ export default class Signup extends Component {
             email: '',
             password: '',
             confirmPassword: '',
+            gender:'',
+            Language:'',
+            Description:'',
+            Qualification:'',
+            Date:new Date(),
+            Video:''
         }
     }
 
@@ -73,7 +81,7 @@ export default class Signup extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.contentContainer}>
                 <Text>{'\n'}</Text>
                 <Text>{'\n'}</Text>
                 <View style={styles.formContainer}>
@@ -84,6 +92,17 @@ export default class Signup extends Component {
                         ref={(input) => this.fullName = input}
                         value={this.state.fullName}
                     />
+                          {/*<DateTimePicker 
+                                value={ this.state.Date }
+                                mode='default'
+                                display='default'
+                          onChange={ date => this.setState({ Date:date }) } />*/}
+               <Form
+                    placeholder="Gender"
+                    onUpdate={(item) =>this.setState({gender:item})}
+                    value={this.state.gender}
+                    ref={(input) => this.gender = input}
+                />
                     <Form
                         placeholder="Email"
                         onUpdate={this.setEmail}
@@ -91,6 +110,7 @@ export default class Signup extends Component {
                         ref={(input) => this.email = input}
                         value={this.state.email}
                     />
+    
                     <Form
                         placeholder="Password"
                         secureTextEntry={true}
@@ -104,15 +124,33 @@ export default class Signup extends Component {
                         secureTextEntry={true}
                         onUpdate={this.setConfirmPassword}
                         ref={(input) => this.confirmPassword = input}
+                        
                         value={this.state.confirmPassword}
                     />
+                    <Form
+                        placeholder="Qualifcation"
+                        secureTextEntry={true}
+                        onUpdate={this.setConfirmPassword}
+                        ref={(input) => this.confirmPassword = input}
+                        
+                        value={this.state.confirmPassword}
+                    />
+                      <Form
+                        placeholder="Language"
+                        secureTextEntry={true}
+                        onUpdate={this.setConfirmPassword}
+                        ref={(input) => this.confirmPassword = input}
+                        
+                        value={this.state.confirmPassword}
+                    />
+                    <Button onPress={this.SignUp} text="Sign up" />
                 </View>
-                <Button onPress={this.SignUp} text="Sign up" />
+                
                 <View style={styles.signupTextCont}>
                     <Text style={styles.signupText}>Already have an account? </Text>
                     <TouchableOpacity onPress={this.goBack}><Text style={styles.signupButton}>Sign in</Text></TouchableOpacity>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
@@ -123,6 +161,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white'
+    },
+    contentContainer: {
+        marginTop: 0,
+        paddingVertical: 20,
+        backgroundColor: '#F5FCFF',
+      },
+      text: {
+        fontSize: 20,
+        backgroundColor: 'white',
+        textAlign: 'left',
+        marginRight:50,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     formContainer: {
         justifyContent: 'center',
