@@ -4,15 +4,18 @@ import {
     Text,
     View,
     TouchableOpacity,
-    ScrollView,Picker
+    ScrollView, Picker
 } from 'react-native';
 import firebase from 'react-native-firebase';
+import RadioGroup from 'react-native-radio-buttons-group';
+import { Actions } from 'react-native-router-flux';
+import { Dropdown } from 'react-native-material-dropdown';
+import DatePicker from 'react-native-datepicker'
+
+
 import Form from '../components/Form';
 import Button from '../components/Button';
-import RadioGroup from 'react-native-radio-buttons-group';
 import { colors, fontSizes } from '../BaseStyles';
-import { Actions } from 'react-native-router-flux';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default class Signup extends Component {
     constructor(props) {
@@ -22,12 +25,12 @@ export default class Signup extends Component {
             email: '',
             password: '',
             confirmPassword: '',
-            gender:'',
-            Language:'',
-            Description:'',
-            Qualification:'',
-            Date:new Date(),
-            Video:''
+            gender: '',
+            language: '',
+            bio: '',
+            qualification: '',
+            date: '',
+            showDatepicker: false,
         }
     }
 
@@ -62,7 +65,7 @@ export default class Signup extends Component {
         if (password !== confirmPassword) {
             alert("Passwords don't match.");
             return;
-        } else if (fullName === "" || email === "" || password === "" || confirmPassword === ""){
+        } else if (fullName === "" || email === "" || password === "" || confirmPassword === "") {
             alert("Please fill all the fields.");
             return;
         }
@@ -79,6 +82,11 @@ export default class Signup extends Component {
             .catch(error => alert(error));
     }
 
+    showDatepicker = () => {
+        this.setState({ showDatepicker: true });
+    };
+
+
     render() {
         return (
             <ScrollView style={styles.contentContainer}>
@@ -92,17 +100,36 @@ export default class Signup extends Component {
                         ref={(input) => this.fullName = input}
                         value={this.state.fullName}
                     />
-                          {/*<DateTimePicker 
-                                value={ this.state.Date }
-                                mode='default'
-                                display='default'
-                          onChange={ date => this.setState({ Date:date }) } />*/}
-               <Form
-                    placeholder="Gender"
-                    onUpdate={(item) =>this.setState({gender:item})}
-                    value={this.state.gender}
-                    ref={(input) => this.gender = input}
-                />
+                    <DatePicker
+                        style={styles.datePickerStyle}
+                        date={this.state.date}
+                        mode="date"
+                        placeholder="Select Date of Birth"
+                        format="YYYY-MM-DD"
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 0,
+                                top: 4,
+                                marginLeft: 0
+                            },
+                            dateInput: {
+                                border: 0,
+                                marginLeft: 36
+                            }
+                            // ... You can check the source to find the other keys.
+                        }}
+                        onDateChange={(date) => { this.setState({ date: date }) }}
+                    />
+                    <Dropdown
+                        containerStyle={styles.dropdownStyle}
+                        pickerStyle={styles.pickerStyle}
+                        label='Gender'
+                        data={[{ value: 'Male' }, { value: 'Female' }]}
+                        onChangeText={value => this.setState({ gender: value })}
+                    />
                     <Form
                         placeholder="Email"
                         onUpdate={this.setEmail}
@@ -110,7 +137,7 @@ export default class Signup extends Component {
                         ref={(input) => this.email = input}
                         value={this.state.email}
                     />
-    
+
                     <Form
                         placeholder="Password"
                         secureTextEntry={true}
@@ -123,29 +150,26 @@ export default class Signup extends Component {
                         placeholder="Confirm Password"
                         secureTextEntry={true}
                         onUpdate={this.setConfirmPassword}
+                        onSubmitEditing={() => this.qualification.focus()}
                         ref={(input) => this.confirmPassword = input}
-                        
                         value={this.state.confirmPassword}
                     />
                     <Form
                         placeholder="Qualifcation"
-                        secureTextEntry={true}
-                        onUpdate={this.setConfirmPassword}
-                        ref={(input) => this.confirmPassword = input}
-                        
-                        value={this.state.confirmPassword}
+                        onUpdate={val => this.setState({ qualification: val })}
+                        onSubmitEditing={() => this.language.focus()}
+                        ref={(input) => this.qualification = input}
+                        value={this.state.qualification}
                     />
-                      <Form
+                    <Form
                         placeholder="Language"
-                        secureTextEntry={true}
-                        onUpdate={this.setConfirmPassword}
-                        ref={(input) => this.confirmPassword = input}
-                        
-                        value={this.state.confirmPassword}
+                        onUpdate={val => this.setState({ language: val })}
+                        ref={(input) => this.language = input}
+                        value={this.state.language}
                     />
                     <Button onPress={this.SignUp} text="Sign up" />
                 </View>
-                
+
                 <View style={styles.signupTextCont}>
                     <Text style={styles.signupText}>Already have an account? </Text>
                     <TouchableOpacity onPress={this.goBack}><Text style={styles.signupButton}>Sign in</Text></TouchableOpacity>
@@ -164,14 +188,13 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         marginTop: 0,
-        paddingVertical: 20,
         backgroundColor: '#F5FCFF',
-      },
-      text: {
+    },
+    text: {
         fontSize: 20,
         backgroundColor: 'white',
         textAlign: 'left',
-        marginRight:50,
+        marginRight: 50,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -194,5 +217,30 @@ const styles = StyleSheet.create({
         color: colors.button,
         fontSize: fontSizes.normal,
         fontWeight: '500'
+    },
+    dropdownStyle: {
+        width: 300,
+        borderRadius: 25,
+        backgroundColor: '#eeeeee',
+        paddingHorizontal: 16,
+        marginVertical: 10,
+    },
+    pickerStyle: {
+        width: 300,
+        borderRadius: 25,
+        backgroundColor: '#eeeeee',
+        paddingHorizontal: 16,
+        marginVertical: 10,
+    },
+    datePickerStyle: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 300,
+        height: 60,
+        borderRadius: 25,
+        backgroundColor: '#eeeeee',
+        paddingHorizontal: 16,
+        marginVertical: 10,
     }
 });
