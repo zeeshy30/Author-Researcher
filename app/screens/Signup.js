@@ -81,11 +81,6 @@ export default class Signup extends Component {
             .catch(error => alert(error));
     }
 
-    showDatepicker = () => {
-        this.setState({ showDatepicker: true });
-    };
-
-
     render() {
         return (
             <ScrollView style={styles.contentContainer}>
