@@ -7,6 +7,7 @@ import Form from '../../components/Form';
 import Button from '../../components/Button';
 import Menu from '../../components/Menu';
 import AddQuote from './AddQuote';
+import firebase from 'react-native-firebase';
 
 
 export default class AddReference extends Component {
@@ -25,14 +26,10 @@ export default class AddReference extends Component {
     uploadReference = async () => {
         try {
             const res = await DocumentPicker.pick({
-                type: [DocumentPicker.types.images],
+                type: [DocumentPicker.types.allFiles],
             });
-            console.log(
-                res.uri,
-                res.type, // mime type
-                res.name,
-                res.size
-            );
+            const fileRef = firebase.storage().ref(res.name);
+            const result = await fileRef.putFile(decodeURI(res.uri));
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 // User cancelled the picker, exit any dialogs or menus and move on
@@ -47,7 +44,6 @@ export default class AddReference extends Component {
     }
 
     render() {
-        console.log(this.state.quotes);
         return (
             <>
                 <Menu navigation={this.props.navigation} />
