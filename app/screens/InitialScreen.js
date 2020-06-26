@@ -11,10 +11,19 @@ import { colors } from '../BaseStyles';
 export default class InitialScreen extends Component {
 
     componentDidMount() {
+        this.fetchData();
+    }
+
+    fetchData = async () => {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                AsyncStorage.setItem('loginDetails', JSON.stringify(user));
-                Actions.dashboard();
+                firebase.firestore().collection('Users').where('id', '==', user.uid).get().then(snapshot => {
+                    snapshot.forEach(doc => {
+                        AsyncStorage.setItem('loginDetails', JSON.stringify(doc.data()));
+                    });
+                    Actions.dashboard();
+                });
+
             } else {
                 Actions.login();
             }
