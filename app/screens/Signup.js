@@ -27,6 +27,7 @@ export default class Signup extends Component {
             confirmPassword: '',
             gender: '',
             language: '',
+            bio: '',
             qualification: '',
             date: '',
             showDatepicker: false,
@@ -80,6 +81,11 @@ export default class Signup extends Component {
             })
             .catch(error => alert(error));
     }
+
+    showDatepicker = () => {
+        this.setState({ showDatepicker: true });
+    };
+
 
     render() {
         return (
