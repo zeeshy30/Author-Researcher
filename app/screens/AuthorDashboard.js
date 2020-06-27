@@ -12,6 +12,7 @@ import {
     Caption,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Profile from './Author/Profile';
 import Statistics from './Author/Statistics';
 import AddReference from './Author/AddReference';

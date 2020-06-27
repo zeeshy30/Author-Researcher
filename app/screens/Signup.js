@@ -1,13 +1,15 @@
+
 import React, { Component } from 'react';
 import {
     StyleSheet,
     Text,
     View,
     TouchableOpacity,
-    ScrollView, Picker
+    ScrollView,
 } from 'react-native';
-import firebase from 'react-native-firebase';
-import RadioGroup from 'react-native-radio-buttons-group';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
+import '@react-native-firebase/firestore';
 import { Actions } from 'react-native-router-flux';
 import { Dropdown } from 'react-native-material-dropdown';
 import DatePicker from 'react-native-datepicker'
@@ -30,7 +32,6 @@ export default class Signup extends Component {
             bio: '',
             qualification: '',
             date: '',
-            showDatepicker: false,
         }
     }
 
@@ -60,6 +61,11 @@ export default class Signup extends Component {
             email,
             password,
             confirmPassword,
+            gender,
+            language,
+            bio,
+            qualification,
+            date,
         } = this.state;
 
         if (password !== confirmPassword) {
@@ -75,9 +81,18 @@ export default class Signup extends Component {
             .createUserWithEmailAndPassword(email, password)
             .then(res => {
                 res.user.updateProfile({
-                    displayName: fullName
+                    displayName: fullName,
                 });
-                this.goBack();
+                firebase.firestore().collection('Users').add({
+                    id: res.user.uid,
+                    email,
+                    fullName,
+                    gender,
+                    language,
+                    qualification,
+                    dateOfBirth: date,
+                })
+                Actions.initialscreen();
             })
             .catch(error => alert(error));
     }
@@ -90,8 +105,6 @@ export default class Signup extends Component {
     render() {
         return (
             <ScrollView style={styles.contentContainer}>
-                <Text>{'\n'}</Text>
-                <Text>{'\n'}</Text>
                 <View style={styles.formContainer}>
                     <Form
                         placeholder="Full Name"
@@ -137,6 +150,7 @@ export default class Signup extends Component {
                         ref={(input) => this.email = input}
                         value={this.state.email}
                     />
+
                     <Form
                         placeholder="Password"
                         secureTextEntry={true}

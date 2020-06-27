@@ -1,14 +1,9 @@
-import React from 'react';
-import { Text, View,TouchableOpacity,StyleSheet } from 'react-native';
-import Menu from '../../components/Menu';
+import React, { Component } from 'react'
 import Communications from 'react-native-communications';
-//
-
-export default Chat = ({ navigation }) => {
-    return (
-        <>
-            <Menu navigation={navigation} />
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+export default class email extends Component {
+    render() {
+        return (
+            <div>
                 <TouchableOpacity 
                         style = {styles.button}
                         onPress={() => Communications.email(['aboutreact11@gmail.com', 'hello@aboutreact.com'],null,null,'Demo Subject','Demo Content for the mail')}>
@@ -17,9 +12,9 @@ export default Chat = ({ navigation }) => {
                             Send an Email
                             </Text>
                 </TouchableOpacity>
-            </View>
-        </>
-    );
+            </div>
+        )
+    }
 }
 const styles = StyleSheet.create({
     inputContainer: {

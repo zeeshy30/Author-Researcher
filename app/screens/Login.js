@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage'
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { Actions } from 'react-native-router-flux';
-import firebase from 'react-native-firebase';
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
+import '@react-native-firebase/firestore';
 
 import { colors, fontSizes } from '../BaseStyles';
 import Form from '../components/Form';
@@ -41,8 +44,13 @@ export default class Login extends Component {
             .auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
             .then(res => {
-                AsyncStorage.setItem('loginDetails', JSON.stringify(res));
-                Actions.dashboard();
+                firebase.firestore().collection('Users').where('id', '==', res.user.uid).get()
+                    .then(snapshot => {
+                        snapshot.forEach(doc => {
+                            AsyncStorage.setItem('loginDetails', JSON.stringify(doc.data()));
+                        });
+                        Actions.dashboard();
+                    });
             })
             .catch(error => alert(error));
     }
@@ -50,6 +58,9 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Text>{'\n'}</Text>
+                <Text>{'\n'}</Text>
+                <Image source={require('../logo.png')} />
                 <Text>{'\n'}</Text>
                 <Text>{'\n'}</Text>
                 <View style={styles.formContainer}>
