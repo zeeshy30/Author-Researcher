@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Stylesheet, View, TouchableOpacity, Text } from 'react-native';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux';
-import firebase from 'react-native-firebase';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
 
 import Login from './screens/Login';
 import Signup from './screens/Signup';
@@ -14,10 +15,12 @@ import Income from './screens/Income';
 import AdminDashboard from './screens/AdminDashboard';
 
 import { fontSizes } from './BaseStyles';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default Routes = () => {
 
     logout = () => {
+        AsyncStorage.clear();
         firebase.auth().signOut();
         Actions.login();
     };

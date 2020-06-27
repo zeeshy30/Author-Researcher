@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage'
 
-import firebase from 'react-native-firebase';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
+import '@react-native-firebase/firestore';
 import { Actions } from 'react-native-router-flux';
 
 
@@ -14,16 +16,16 @@ export default class InitialScreen extends Component {
         this.fetchData();
     }
 
-    fetchData = async () => {
+    fetchData = () => {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                firebase.firestore().collection('Users').where('id', '==', user.uid).get().then(snapshot => {
-                    snapshot.forEach(doc => {
-                        AsyncStorage.setItem('loginDetails', JSON.stringify(doc.data()));
+                firebase.firestore().collection('Users').where('id', '==', user.uid).get()
+                    .then(snapshot => {
+                        snapshot.forEach(doc => {
+                            AsyncStorage.setItem('loginDetails', JSON.stringify(doc.data()));
+                        });
                     });
-                    Actions.dashboard();
-                });
-
+                Actions.dashboard();
             } else {
                 Actions.login();
             }
