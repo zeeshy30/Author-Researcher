@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, PermissionsAndroid } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import DocumentPicker from 'react-native-document-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/storage';
+import '@react-native-firebase/firestore';
 
 import Form from '../../components/Form';
 import Button from '../../components/Button';
 import Menu from '../../components/Menu';
 import AddQuote from './AddQuote';
-import firebase from 'react-native-firebase';
 
 
 export default class AddReference extends Component {
@@ -19,22 +24,68 @@ export default class AddReference extends Component {
             addQuote: false,
             quotes: [],
             views: 0,
+            fileName: '',
+            fileURI: '',
+            saving: false,
         }
     }
 
-    /* TODO: add this functionality */
+    save = async () => {
+        this.setState({ saving: true });
+
+        const {
+            title,
+            rating,
+            quotes,
+            views,
+            fileName,
+            fileURI,
+        } = this.state;
+
+        if (title === '' ||
+            quotes === [] ||
+            fileName === '') {
+            alert('Please Fill all the fields');
+            return;
+        }
+
+        const docName = title + '-' + fileName;
+        const fileRef = firebase.storage().ref(docName);
+        await fileRef.putFile(fileURI);
+
+        AsyncStorage.getItem('loginDetails').then(userDetailStr => {
+            const userDetails = JSON.parse(userDetailStr);
+            firebase.firestore().collection('References').add({
+                authorId: userDetails.id,
+                title,
+                rating,
+                documentName: docName,
+                views,
+                quotes,
+            });
+        });
+
+        this.setState({ title: '', quotes: [], fileName: '', fileURI: '', rating: 0, saving: false });
+
+    }
+
     uploadReference = async () => {
         try {
-            const res = await DocumentPicker.pick({
-                type: [DocumentPicker.types.allFiles],
-            });
-            const fileRef = firebase.storage().ref(res.name);
-            const result = await fileRef.putFile(decodeURI(res.uri));
+            const filePermission = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            );
+            if (filePermission === PermissionsAndroid.RESULTS.GRANTED) {
+                const res = await DocumentPicker.pick({
+                    type: [DocumentPicker.types.allFiles],
+                });
+                const stat = await RNFetchBlob.fs.stat(res.uri);
+                this.setState({ fileName: res.name, fileURI: stat.path });
+            }
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 // User cancelled the picker, exit any dialogs or menus and move on
             } else {
-                throw err;
+                alert(err);
             }
         }
     }
@@ -64,7 +115,7 @@ export default class AddReference extends Component {
                         />
                         <Button onPress={this.uploadReference} text='Upload Reference' />
                         <Button onPress={() => this.setState({ addQuote: true })} text='Add A Quote' />
-                        <Button onPress={this.submit} text='Submit' />
+                        <Button onPress={this.save} text='Submit' />
                     </View>
                     )}
             </>

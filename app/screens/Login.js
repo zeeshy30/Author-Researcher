@@ -3,7 +3,10 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { Actions } from 'react-native-router-flux';
-import firebase from 'react-native-firebase';
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
+import '@react-native-firebase/firestore';
 
 import { colors, fontSizes } from '../BaseStyles';
 import Form from '../components/Form';
