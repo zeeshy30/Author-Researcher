@@ -17,6 +17,7 @@ import Profile from './Author/Profile';
 import Statistics from './Author/Statistics';
 import AddReference from './Author/AddReference';
 import Chat from './Author/Chat';
+import Earning from './Author/Earning';
 
 function CustomDrawerContent(props) {
     const { navigate } = props.navigation;
@@ -71,6 +72,14 @@ function CustomDrawerContent(props) {
             )}
                 label="Chat"
                 onPress={() => { navigate('Chat') }} />
+            <DrawerItem icon={({ color, size }) => (
+                <Icon name="currency-usd"
+                    color={color}
+                    size={size}
+                />
+            )}
+                label="Earning"
+                onPress={() => { navigate('Earning') }} />
         </DrawerContentScrollView>
     );
 }
@@ -84,6 +93,7 @@ function MyDrawer() {
             <Drawer.Screen name="Statistics" component={Statistics} />
             <Drawer.Screen name="AddReference" component={AddReference} />
             <Drawer.Screen name="Chat" component={Chat} />
+            <Drawer.Screen name="Earning" component={Earning} />
         </Drawer.Navigator>
     );
 }

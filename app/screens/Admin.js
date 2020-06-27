@@ -1,48 +1,56 @@
 import React ,{Component}from 'react';
 import { Text, View ,StyleSheet} from 'react-native';
-import Menu from '../../components/Menu';
 import { Dropdown } from 'react-native-material-dropdown';
-export default class Statistics extends React.Component{
+export default class Admin extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
           Author_name:'' ,
-          View_per_reference:'',
-          Quote_per_reference:''
+          View_per_author:'',
+          Reference_per_classification:'',
+          like_per_author:'',
         }
       }
    render() {
     return (
         <>
-            <Menu navigation={this.props.navigation} />
             <View >
-                <Text style ={styles.text}>Number of References : 50</Text>
-                <Text style ={styles.text}>Number of Views :50 </Text>
+                <Text style ={styles.text}>Number of Authors : 50</Text>
+                <Text style = {styles.text}>    Number of References: 50 </Text>
                 <Dropdown
                         containerStyle={styles.dropdownStyle}
                         pickerStyle={styles.pickerStyle}
-                        label= 'Select Number of Views per reference'
+                        label= 'Select Author to view rating'
                         data={[{ value: 'A' }, { value: 'B' }]}
-                        onChangeText={value => this.setState({  View_per_reference: value})}
+                        onChangeText={value => this.setState({  Author_name: value})}
                     />
-                 <Text style = {styles.text}>Views : 50</Text>
-                <Text style = {styles.text}>Number of Quotes : 50</Text>
+                    <Dropdown
+                        containerStyle={styles.dropdownStyle}
+                        pickerStyle={styles.pickerStyle}
+                        label=  'Number of View per Author'
+                        data={[{ value: 'A' }, { value: 'B' }]}
+                        onChangeText={value => this.setState({   View_per_author: value })}
+                    />
                 <Dropdown
                         containerStyle={styles.dropdownStyle}
                         pickerStyle={styles.pickerStyle}
-                        label= 'Number of Quotes per Reference'
+                        label= 'Number of Reference per classification'
                         data={[{ value: 'A' }, { value: 'B' }]}
-                        onChangeText={value => this.setState({  Quote_per_reference: value })}
+                        onChangeText={value => this.setState({  Reference_per_classification: value })}
                     />
-                <Text style = {styles.text}>Quotes : 50</Text>
+                <Dropdown
+                        containerStyle={styles.dropdownStyle}
+                        pickerStyle={styles.pickerStyle}
+                        label=  'Number of likes per Author'
+                        data={[{ value: 'A' }, { value: 'B' }]}
+                        onChangeText={value => this.setState({  like_per_author: value })}
+                    />
             </View>
         </>
     )}
 }
 const styles = StyleSheet.create({
    container : { flex: 1, justifyContent: 'center', alignItems: 'center' },
-   
-
    text: {
         fontSize: 30,
         fontWeight :'bold',

@@ -89,6 +89,7 @@ export default class Signup extends Component {
                     language,
                     qualification,
                     dateOfBirth: date,
+                    bio
                 })
                 Actions.initialscreen();
             })
@@ -177,6 +178,12 @@ export default class Signup extends Component {
                         onUpdate={val => this.setState({ language: val })}
                         ref={(input) => this.language = input}
                         value={this.state.language}
+                    />
+                    <Form
+                        placeholder="Bio"
+                        onUpdate={val => this.setState({ bio: val })}
+                        ref={(input) => this.bio = input}
+                        value={this.state.bio}
                     />
                     <Button onPress={this.SignUp} text="Sign up" />
                 </View>

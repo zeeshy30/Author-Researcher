@@ -9,6 +9,9 @@ import AuthorDashboard from './screens/AuthorDashboard';
 import InitialScreen from './screens/InitialScreen';
 import Dashboard from './screens/Dashboard';
 import Search from './screens/Search';
+import Admin from './screens/Admin';
+import Income from './screens/Income';
+import AdminDashboard from './screens/AdminDashboard';
 
 import { fontSizes } from './BaseStyles';
 
@@ -40,6 +43,9 @@ export default Routes = () => {
                 <Scene key="signup" component={Signup} title="Sign up" />
                 <Scene key="search" component={Search} title="Search" />
                 <Scene key="authorcontrolpanel" component={AuthorDashboard} title="Control Panel" hideNavBar />
+                <Scene key="admindashboard" component={AdminDashboard} title="AdminDashboard" />
+                <Scene key="admin" component={Admin} title="Admin" />
+                <Scene key="income" component={Income} title="Income" />
 
 
             </Stack>

@@ -15,6 +15,7 @@
     "@react-navigation/native": "5.5.1",
     "@react-navigation/stack": "5.5.1",
     "@wwdrew/react-native-numeric-textinput": "1.1.0",
+    "firebase": "^7.15.5",
     "native-base": "2.13.12",
     "prop-types": "15.7.2",
     "react": "16.9.0",
@@ -37,7 +38,8 @@
     "react-navigation": "4.1.0",
     "react-navigation-stack": "2.1.0",
     "stream-chat-expo": "0.12.3",
-    "styled-map": "3.3.0"
+    "styled-map": "3.3.0",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
