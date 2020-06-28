@@ -16,6 +16,7 @@ import DatePicker from 'react-native-datepicker'
 
 
 import Form from '../components/Form';
+import Textarea from '../components/Textarea';
 import Button from '../components/Button';
 import { colors, fontSizes } from '../BaseStyles';
 
@@ -87,11 +88,12 @@ export default class Signup extends Component {
                     id: res.user.uid,
                     email,
                     fullName,
+                    bio,
                     gender,
                     language,
                     qualification,
                     dateOfBirth: date,
-                })
+                });
                 Actions.initialscreen();
             })
             .catch(error => alert(error));
@@ -112,6 +114,11 @@ export default class Signup extends Component {
                         onSubmitEditing={() => this.email.focus()}
                         ref={(input) => this.fullName = input}
                         value={this.state.fullName}
+                    />
+                    <Textarea
+                        placeholder="Bio"
+                        onUpdate={val => this.setState({bio: val})}
+                        value={this.state.bio}
                     />
                     <DatePicker
                         style={styles.datePickerStyle}
