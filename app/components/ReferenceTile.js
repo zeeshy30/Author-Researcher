@@ -1,9 +1,10 @@
-import React from 'react';
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import Icons from 'react-native-vector-icons/Entypo';
 import Communications from 'react-native-communications';
 import { SliderBox } from "react-native-image-slider-box";
+import QuoteTile from './QuoteTile';
 
 /*
 props : {
@@ -20,10 +21,12 @@ props : {
 
 
 export default ReferenceTile = props => {
+    const [showQuotes, setShowQuote] = useState(false);
+
     return (
         <View style={styles.tileContainer}>
-            <View style={styles.row}>
-                <Rating
+            <TouchableOpacity style={styles.row} onPress={() => setShowQuote(!showQuotes)}>
+                {!showQuotes && <Rating
                     type='custom'
                     tintColor='#FFE6CD'
                     imageSize={16}
@@ -31,7 +34,7 @@ export default ReferenceTile = props => {
                     fractions={1}
                     startingValue={props.rating}
                     readonly
-                />
+                />}
                 <View style={styles.col}>
                     <Icons
                         style={{ marginRight: 5 }}
@@ -43,22 +46,26 @@ export default ReferenceTile = props => {
                     <Icons name='controller-play' color='orange' size={17} />
                 </View>
                 <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.title} ({props.authorName}) </Text>
-            </View>
-            <View style={styles.row}>
-                <SliderBox
-                    parentWidth={100}
-                    sliderBoxHeight={120}
-                    images={props.images}
-                />
-                <ScrollView style={styles.detailBox}>
-                    <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.authorBio}</Text>
+            </TouchableOpacity>
+            {showQuotes === false
+                ? (<View style={styles.row}>
+                    <SliderBox
+                        parentWidth={100}
+                        sliderBoxHeight={120}
+                        images={props.images}
+                    />
+                    <ScrollView style={styles.detailBox}>
+                        <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.authorBio}</Text>
 
-                </ScrollView>
-                <ScrollView style={styles.detailBox}>
-                    <Text style={{ flex: 1, flexWrap: 'wrap', }}> {props.summary}</Text>
+                    </ScrollView>
+                    <ScrollView style={styles.detailBox}>
+                        <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.summary}</Text>
 
-                </ScrollView>
-            </View>
+                    </ScrollView>
+                </View>) : (props.quotes.map(quote =>
+                    <QuoteTile key={quote.quotation} {...quote} />
+                ))
+            }
         </View>
     );
 }
@@ -78,6 +85,7 @@ const styles = StyleSheet.create({
         maxHeight: 150,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginTop: 5,
     },
     col: {
         marginRight: 10,

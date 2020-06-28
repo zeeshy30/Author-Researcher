@@ -63,8 +63,8 @@ export default class AddQuote extends Component {
                     <NumericInput
                         style={styles.numericInput}
                         type='currency'
-                        locale='ja-JP'
-                        currency='JPY'
+                        locale='en-US'
+                        currency='USD'
                         placeholder='Price'
                         value={this.state.price}
                         onUpdate={this.setPrice} />
@@ -76,7 +76,7 @@ export default class AddQuote extends Component {
                 </View>
                 <Text>{'\n'}</Text>
                 <Button onPress={this.save} text='Add' />
-                <Button onPress={this.props.goBack} text='Go Back' />
+                <Button onPress={this.props.goBack} text='Back' />
 
             </View>
         )

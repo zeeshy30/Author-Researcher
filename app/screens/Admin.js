@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 
 
-export default class Admin extends Component {
+export default class Admin extends React.Component {
 
     render() {
         return (

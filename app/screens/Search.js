@@ -3,6 +3,7 @@ import { SearchBar } from 'react-native-elements';
 import { Text, ScrollView, StyleSheet, Image } from 'react-native';
 import { colors, fontSizes } from '../BaseStyles';
 import ReferenceTile from '../components/ReferenceTile';
+import QuoteTile from '../components/QuoteTile';
 
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/storage';
