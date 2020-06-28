@@ -13,61 +13,70 @@ export default class AddQuote extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            Style: '',
-            Quotation: '',
-            Price: '',
-            Booknumber: '',
+            quoteIdea: '',
+            quotation: '',
+            price: '',
+            bookPage: '',
         }
     }
     setQuotation = val => {
-        this.setState({ Quotation: val });
+        this.setState({ quotation: val });
     }
 
-    setStyle = val => {
-        this.setState({ Style: val });
+    setQuoteIdea = val => {
+        this.setState({ quoteIdea: val });
     }
 
     setPrice = val => {
-        this.setState({ Price: val });
+        this.setState({ price: val });
     }
 
-    setBooknumber = val => {
-        this.setState({ Booknumber: val });
+    setBookPage = val => {
+        this.setState({ bookPage: val });
     }
 
     save = () => {
-        this.props.onAddQuote({ ...this.state });
+        this.props.onAddQuote({ ...this.state }, this.clearState);
+    }
+
+    clearState = () => {
+        this.setState({
+            quoteIdea: '',
+            quotation: '',
+            price: '',
+            bookPage: '',
+        });
     }
 
     render() {
         return (
             <View style={styles.inputContainer}>
-                <Text>{'\n'}</Text>
                 <Textarea
-                    placeholder="Your Quotation"
-                    value={this.state.Quotation}
+                    placeholder="Quote"
+                    value={this.state.quotation}
                     onUpdate={this.setQuotation} />
                 <Textarea
-                    placeholder="Your Style"
-                    value={this.state.Style}
-                    onUpdate={this.setStyle} />
+                    placeholder="Idea of Quote"
+                    value={this.state.quoteIdea}
+                    onUpdate={this.setQuoteIdea} />
                 <View style={styles.numericContent}>
                     <NumericInput
                         style={styles.numericInput}
                         type='currency'
                         locale='ja-JP'
                         currency='JPY'
-                        placeholder= 'Price'
-                        value={this.state.Price}
+                        placeholder='Price'
+                        value={this.state.price}
                         onUpdate={this.setPrice} />
                     <NumericInput
                         style={styles.numericInput}
-                        placeholder="Book Number"
-                        value={this.state.Booknumber}
-                        onUpdate={this.setBooknumber} />
+                        placeholder="Page Number"
+                        value={this.state.bookPage}
+                        onUpdate={this.setBookPage} />
                 </View>
                 <Text>{'\n'}</Text>
                 <Button onPress={this.save} text='Add' />
+                <Button onPress={this.props.goBack} text='Go Back' />
 
             </View>
         )
@@ -85,7 +94,6 @@ const styles = StyleSheet.create({
     numericContent: {
         marginVertical: 10,
         width: 300,
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },

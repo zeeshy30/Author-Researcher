@@ -158,8 +158,12 @@ export default class AddReference extends Component {
         }
     }
 
-    addQuote = val => {
-        this.setState({ quotes: [...this.state.quotes, val], addQuote: false })
+    addQuote = (val, clearState) => {
+        this.setState({ quotes: [...this.state.quotes, val] }, clearState)
+    }
+
+    goBack = () => {
+        this.setState({ addQuote: false });
     }
 
     getImagesNamesJSX = () => {
@@ -173,7 +177,7 @@ export default class AddReference extends Component {
             <>
                 <Menu navigation={this.props.navigation} />
                 {this.state.addQuote ?
-                    (<AddQuote onAddQuote={this.addQuote} />)
+                    (<AddQuote onAddQuote={this.addQuote} goBack={this.goBack} />)
                     : (<View style={styles.container}>
                         <Form
                             placeholder='Reference Title'
@@ -198,8 +202,8 @@ export default class AddReference extends Component {
                             </Text>
                             {this.state.fileName !== '' &&
                                 <Icons name='clear' style={{ marginRight: 10 }}
-                                size={20}
-                                onPress={() => this.setState({ fileName: '', fileURI: '' })} />}
+                                    size={20}
+                                    onPress={() => this.setState({ fileName: '', fileURI: '' })} />}
                         </View>
                         <Icons name='collections' size={20} onPress={this.uploadPicture} />
                         {Object.keys(this.state.imagesNameURI).length === 0 ?

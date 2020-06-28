@@ -1,88 +1,111 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
     StyleSheet,
     Text,
     View,
     Image,
-    TouchableOpacity
-  } from 'react-native';
+} from 'react-native';
 import Menu from '../../components/Menu';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export default Profile = ({ navigation }) => {
-    return (
-        <>
-            <Menu navigation={navigation} />
-            <View style={styles.container}>
-          <View style={styles.header}></View>
-          <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
-          <View style={styles.body}>
-            <View style={styles.bodyContent}>
-              <Text style={styles.name}>John Doe</Text>
-              <Text style={styles.info}>UX Designer / Mobile developer</Text>
-              <Text style={styles.info}>anza@gmail.com</Text>
-              <Text style={styles.info}>English</Text>
-              <Text style={styles.info}>Pakistan</Text>
-              <Text style={styles.description}>Hello i am there looking for job</Text>
-            </View>
-        </View>
-    </View>
-        </>
-    );
+export default class Profile extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            profileDetails: {},
+        }
+    }
+    componentDidMount() {
+        AsyncStorage.getItem('loginDetails').then((value) => {
+            this.setState({ profileDetails: JSON.parse(value) });
+        })
+
+    }
+    render() {
+        const {
+            fullName,
+            email,
+            bio,
+            language,
+            qualification
+        } = this.state.profileDetails;
+
+        return (
+            <>
+                <Menu navigation={this.props.navigation} />
+                <View style={styles.container}>
+                    <View style={styles.header}></View>
+                    <Image style={styles.avatar} source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar6.png' }} />
+                    <View style={styles.body}>
+                        <View style={styles.bodyContent}>
+                            <Text style={styles.name}>{fullName}</Text>
+                            <Text style={styles.description}>{bio}</Text>
+                            <Text style={styles.info}>Email: {email}</Text>
+                            <Text style={styles.info}>Language: {language}</Text>
+                            <Text style={styles.info}>qualification: {qualification}</Text>
+                        </View>
+                    </View>
+                </View>
+            </>
+
+        )
+    }
 }
+
 const styles = StyleSheet.create({
-  header:{
-    backgroundColor: "#00BFFF",
-    height:200,
-  },
-  avatar: {
-    width: 130,
-    height: 130,
-    borderRadius: 63,
-    borderWidth: 4,
-    borderColor: "white",
-    marginBottom:10,
-    alignSelf:'center',
-    position: 'absolute',
-    marginTop:130
-  },
-  name:{
-    fontSize:22,
-    color:"#FFFFFF",
-    fontWeight:'600',
-  },
-  body:{
-    marginTop:40,
-  },
-  bodyContent: {
-    flex: 1,
-    alignItems: 'center',
-    padding:30,
-  },
-  name:{
-    fontSize:28,
-    color: "#696969",
-    fontWeight: "600"
-  },
-  info:{
-    fontSize:16,
-    color: "#00BFFF",
-    marginTop:10
-  },
-  description:{
-    fontSize:16,
-    color: "#696969",
-    marginTop:10,
-    textAlign: 'center'
-  },
-  buttonContainer: {
-    marginTop:10,
-    height:45,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom:20,
-    width:250,
-    borderRadius:30,
-    backgroundColor: "#00BFFF",
-  },
+    header: {
+        backgroundColor: "#00BFFF",
+        height: 200,
+    },
+    avatar: {
+        width: 130,
+        height: 130,
+        borderRadius: 63,
+        borderWidth: 4,
+        borderColor: "white",
+        marginBottom: 10,
+        alignSelf: 'center',
+        position: 'absolute',
+        marginTop: 130
+    },
+    name: {
+        fontSize: 22,
+        color: "#FFFFFF",
+        fontWeight: '600',
+    },
+    body: {
+        marginTop: 40,
+    },
+    bodyContent: {
+        flex: 1,
+        alignItems: 'center',
+        padding: 30,
+    },
+    name: {
+        fontSize: 28,
+        color: "#696969",
+        fontWeight: "600"
+    },
+    info: {
+        fontSize: 16,
+        color: "#00BFFF",
+        marginTop: 10
+    },
+    description: {
+        fontSize: 16,
+        color: "#696969",
+        marginTop: 10,
+        textAlign: 'center'
+    },
+    buttonContainer: {
+        marginTop: 10,
+        height: 45,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        width: 250,
+        borderRadius: 30,
+        backgroundColor: "#00BFFF",
+    },
 });
