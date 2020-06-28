@@ -1,33 +1,26 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { colors, fontSizes } from '../BaseStyles';
 
-export default Dashboard = () => {
+export default AdminDashboard = () => {
     return (
         <View style={styles.container}>
             <TouchableOpacity
                 style={styles.ResearcherButton}
-                onPress={() => Actions.authorcontrolpanel()}
+                onPress={() => Actions.admin()}
             >
-
-                <Text style={styles.signupButton}>Author</Text>
-
+                <Text style={styles.signupButton}>General Information</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
                 style={styles.ResearcherButton}
-                onPress={() => Actions.search()}
+                onPress={() => Actions.income()}
             >
-                <Text style={styles.signupButton}>Researcher</Text>
+                <Text style={styles.signupButton}>Financial Information</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.ResearcherButton}
-                onPress={() => Actions.admindashboard()}
-            >
-                <Text style={styles.signupButton}>Admin</Text>
-            </TouchableOpacity>
+
         </View>
     )
 }
@@ -42,7 +35,6 @@ const styles = StyleSheet.create({
         paddingBottom: 25,
 
     },
-
     ResearcherButton: {
         flex: 1,
         justifyContent: 'center',
@@ -51,7 +43,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f2f2',
         borderRadius: 25,
         marginVertical: 25,
-        paddingVertical: 12,
     },
     signupButton: {
         color: colors.inputText,
@@ -59,5 +50,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 30
     }
-
 })

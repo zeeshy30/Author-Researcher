@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Stylesheet, View, TouchableOpacity, Text } from 'react-native';
+import React from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -10,6 +10,9 @@ import AuthorDashboard from './screens/AuthorDashboard';
 import InitialScreen from './screens/InitialScreen';
 import Dashboard from './screens/Dashboard';
 import Search from './screens/Search';
+import Admin from './screens/Admin';
+import Income from './screens/Income';
+import AdminDashboard from './screens/AdminDashboard';
 
 import { fontSizes } from './BaseStyles';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -43,6 +46,9 @@ export default Routes = () => {
                 <Scene key="signup" component={Signup} title="Sign up" />
                 <Scene key="search" component={Search} title="Search" />
                 <Scene key="authorcontrolpanel" component={AuthorDashboard} title="Control Panel" hideNavBar />
+                <Scene key="admindashboard" component={AdminDashboard} title="AdminDashboard" />
+                <Scene key="admin" component={Admin} title="Admin" />
+                <Scene key="income" component={Income} title="Income" />
 
 
             </Stack>
