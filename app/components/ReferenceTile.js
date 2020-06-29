@@ -62,8 +62,9 @@ export default ReferenceTile = props => {
                         <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.summary}</Text>
 
                     </ScrollView>
-                </View>) : (props.quotes.map(quote =>
-                    <QuoteTile key={quote.quotation} {...quote} />
+                </View>) : (props.quotes.map((quote, index) => {
+                    return <QuoteTile key={index} {...quote} />
+                }
                 ))
             }
         </View>

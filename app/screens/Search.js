@@ -30,6 +30,7 @@ export default class Search extends React.Component {
             let References = [];
             snapshots.forEach(doc => {
                 const reference = doc.data();
+                reference.docID = doc.id;
                 return References.push(reference)
             });
 
@@ -88,8 +89,8 @@ export default class Search extends React.Component {
 
                 />
                 {References.length
-                    ? (References.map(ref =>
-                        <ReferenceTile key={ref.title} {...ref} />))
+                    ? (References.map((ref, index) =>
+                        <ReferenceTile key={index} {...ref} />))
                     : (<Text> loading...</Text>)}
             </ScrollView>
         );

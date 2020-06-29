@@ -22,7 +22,9 @@ export default class InitialScreen extends Component {
                 firebase.firestore().collection('Users').where('id', '==', user.uid).get()
                     .then(snapshot => {
                         snapshot.forEach(doc => {
-                            AsyncStorage.setItem('loginDetails', JSON.stringify(doc.data()));
+                            const details = doc.data();
+                            details.docID = doc.id;
+                            AsyncStorage.setItem('loginDetails', JSON.stringify(details));
                         });
                     });
                 Actions.dashboard();

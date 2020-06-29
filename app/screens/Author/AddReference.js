@@ -167,8 +167,8 @@ export default class AddReference extends Component {
     }
 
     getImagesNamesJSX = () => {
-        return Object.keys(this.state.imagesNameURI).map(val => {
-            return (<Text key={val}> {val} </Text>);
+        return Object.keys(this.state.imagesNameURI).map((val, index) => {
+            return (<Text key={index}> {val} </Text>);
         });
     }
 
