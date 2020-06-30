@@ -6,25 +6,31 @@ import {
     View,
     TouchableOpacity,
     ScrollView,
+    PermissionsAndroid,
 } from 'react-native';
+import DocumentPicker from 'react-native-document-picker';
+import { Actions } from 'react-native-router-flux';
+import RNFetchBlob from 'rn-fetch-blob';
+import { Dropdown } from 'react-native-material-dropdown';
+import DatePicker from 'react-native-datepicker'
+import Icons from "react-native-vector-icons/MaterialIcons"
+
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
-import { Actions } from 'react-native-router-flux';
-import { Dropdown } from 'react-native-material-dropdown';
-import DatePicker from 'react-native-datepicker'
-
+import '@react-native-firebase/storage';
 
 import Form from '../components/Form';
 import Textarea from '../components/Textarea';
 import Button from '../components/Button';
+import LoadingScreen from '../components/LoadingScreen';
 import { colors, fontSizes } from '../BaseStyles';
-import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Signup extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            processing: false,
             fullName: '',
             email: '',
             password: '',
@@ -34,6 +40,8 @@ export default class Signup extends Component {
             bio: '',
             qualification: '',
             date: '',
+            imageName: '',
+            imageURI: '',
         }
     }
 
@@ -68,6 +76,8 @@ export default class Signup extends Component {
             bio,
             qualification,
             date,
+            imageName,
+            imageURI
         } = this.state;
 
         if (password !== confirmPassword) {
@@ -78,127 +88,171 @@ export default class Signup extends Component {
             return;
         }
 
+        this.setState({ processing: true });
+        let fileRef = null;
+        if (imageName != '')
+            fileRef = firebase.storage().ref(email + '-' + imageName);
+
         firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
-            .then(res => {
+            .then(async res => {
                 res.user.updateProfile({
                     displayName: fullName,
                 });
-                firebase.firestore().collection('Users').doc(res.user.uid).set({
-                    email,
-                    fullName,
-                    bio,
-                    gender,
-                    language,
-                    qualification,
-                    dateOfBirth: date,
-                }).then(() => {
+                try {
+                    if (fileRef)
+                        await fileRef.putFile(imageURI);
+                    await firebase.firestore().collection('Users').doc(res.user.uid).set({
+                        email,
+                        fullName,
+                        bio,
+                        gender,
+                        language,
+                        qualification,
+                        dateOfBirth: date,
+                        imageName: imageName === '' ? '' : (email + '-' + imageName),
+                    });
                     Actions.initialscreen();
-                }).catch(err => {
+                } catch (err) {
+                    this.setState({ processing: false })
                     alert(err);
-                });
+                };
             })
-            .catch(error => alert(error));
+            .catch(error => {
+                this.setState({ processing: false })
+                alert(error)
+            });
     }
 
     showDatepicker = () => {
         this.setState({ showDatepicker: true });
     };
 
+    uploadPicture = async () => {
+        try {
+            const filePermission = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            );
+            if (filePermission === PermissionsAndroid.RESULTS.GRANTED) {
+                const res = await DocumentPicker.pick({
+                    type: [DocumentPicker.types.images],
+                });
+
+                await RNFetchBlob.fs.stat(res.uri).then(stat => {
+                    const name = res.name;
+                    const imageURI = stat.path;
+                    this.setState({ imageName: name, imageURI });
+                });
+            }
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                // User cancelled the picker, exit any dialogs or menus and move on
+            } else {
+                alert(err);
+            }
+        }
+    }
+
 
     render() {
-        return (
-            <ScrollView style={styles.contentContainer}>
-                <View style={styles.formContainer}>
-                    <Form
-                        placeholder="Full Name"
-                        onUpdate={this.setName}
-                        onSubmitEditing={() => this.email.focus()}
-                        ref={(input) => this.fullName = input}
-                        value={this.state.fullName}
-                    />
-                    <Textarea
-                        placeholder="Bio"
-                        onUpdate={val => this.setState({ bio: val })}
-                        value={this.state.bio}
-                    />
-                    <DatePicker
-                        style={styles.datePickerStyle}
-                        date={this.state.date}
-                        mode="date"
-                        placeholder="Select Date of Birth"
-                        format="YYYY-MM-DD"
-                        confirmBtnText="Confirm"
-                        cancelBtnText="Cancel"
-                        customStyles={{
-                            dateIcon: {
-                                position: 'absolute',
-                                left: 0,
-                                top: 4,
-                                marginLeft: 0
-                            },
-                            dateInput: {
-                                border: 0,
-                                marginLeft: 36
-                            }
-                            // ... You can check the source to find the other keys.
-                        }}
-                        onDateChange={(date) => { this.setState({ date: date }) }}
-                    />
-                    <Dropdown
-                        containerStyle={styles.dropdownStyle}
-                        pickerStyle={styles.pickerStyle}
-                        label='Gender'
-                        data={[{ value: 'Male' }, { value: 'Female' }]}
-                        onChangeText={value => this.setState({ gender: value })}
-                    />
-                    <Form
-                        placeholder="Email"
-                        onUpdate={this.setEmail}
-                        onSubmitEditing={() => this.password.focus()}
-                        ref={(input) => this.email = input}
-                        value={this.state.email}
-                    />
+        return <>
+            {this.state.processing
+                ? <LoadingScreen /> : (
+                    <ScrollView style={styles.contentContainer}>
+                        <View style={styles.formContainer}>
+                            <Form
+                                placeholder="Full Name"
+                                onUpdate={this.setName}
+                                onSubmitEditing={() => this.email.focus()}
+                                ref={(input) => this.fullName = input}
+                                value={this.state.fullName}
+                            />
+                            <Textarea
+                                placeholder="Bio"
+                                onUpdate={val => this.setState({ bio: val })}
+                                value={this.state.bio}
+                            />
+                            <DatePicker
+                                style={styles.datePickerStyle}
+                                date={this.state.date}
+                                mode="date"
+                                placeholder="Select Date of Birth"
+                                format="YYYY-MM-DD"
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                customStyles={{
+                                    dateIcon: {
+                                        position: 'absolute',
+                                        left: 0,
+                                        top: 4,
+                                        marginLeft: 0
+                                    },
+                                    dateInput: {
+                                        border: 0,
+                                        marginLeft: 36
+                                    }
+                                }}
+                                onDateChange={(date) => { this.setState({ date: date }) }}
+                            />
+                            <Dropdown
+                                containerStyle={styles.dropdownStyle}
+                                pickerStyle={styles.pickerStyle}
+                                label='Gender'
+                                data={[{ value: 'Male' }, { value: 'Female' }]}
+                                onChangeText={value => this.setState({ gender: value })}
+                            />
+                            <Form
+                                placeholder="Email"
+                                onUpdate={this.setEmail}
+                                onSubmitEditing={() => this.password.focus()}
+                                ref={(input) => this.email = input}
+                                value={this.state.email}
+                            />
 
-                    <Form
-                        placeholder="Password"
-                        secureTextEntry={true}
-                        onUpdate={this.setPassword}
-                        onSubmitEditing={() => this.confirmPassword.focus()}
-                        ref={(input) => this.password = input}
-                        value={this.state.password}
-                    />
-                    <Form
-                        placeholder="Confirm Password"
-                        secureTextEntry={true}
-                        onUpdate={this.setConfirmPassword}
-                        onSubmitEditing={() => this.qualification.focus()}
-                        ref={(input) => this.confirmPassword = input}
-                        value={this.state.confirmPassword}
-                    />
-                    <Form
-                        placeholder="Qualifcation"
-                        onUpdate={val => this.setState({ qualification: val })}
-                        onSubmitEditing={() => this.language.focus()}
-                        ref={(input) => this.qualification = input}
-                        value={this.state.qualification}
-                    />
-                    <Form
-                        placeholder="Language"
-                        onUpdate={val => this.setState({ language: val })}
-                        ref={(input) => this.language = input}
-                        value={this.state.language}
-                    />
-                    <Button onPress={this.SignUp} text="Sign up" />
-                </View>
+                            <Form
+                                placeholder="Password"
+                                secureTextEntry={true}
+                                onUpdate={this.setPassword}
+                                onSubmitEditing={() => this.confirmPassword.focus()}
+                                ref={(input) => this.password = input}
+                                value={this.state.password}
+                            />
+                            <Form
+                                placeholder="Confirm Password"
+                                secureTextEntry={true}
+                                onUpdate={this.setConfirmPassword}
+                                onSubmitEditing={() => this.qualification.focus()}
+                                ref={(input) => this.confirmPassword = input}
+                                value={this.state.confirmPassword}
+                            />
+                            <Form
+                                placeholder="Qualifcation"
+                                onUpdate={val => this.setState({ qualification: val })}
+                                onSubmitEditing={() => this.language.focus()}
+                                ref={(input) => this.qualification = input}
+                                value={this.state.qualification}
+                            />
+                            <Form
+                                placeholder="Language"
+                                onUpdate={val => this.setState({ language: val })}
+                                ref={(input) => this.language = input}
+                                value={this.state.language}
+                            />
+                            <Icons name='collections' size={20} onPress={this.uploadPicture} />
+                            <Text style={{ fontSize: 16 }}>
+                                {this.state.imageName === '' ? 'Upload Profile Picture' : this.state.imageName}
+                            </Text>
+                            <Button onPress={this.SignUp} text="Sign up" />
+                        </View>
 
-                <View style={styles.signupTextCont}>
-                    <Text style={styles.signupText}>Already have an account? </Text>
-                    <TouchableOpacity onPress={this.goBack}><Text style={styles.signupButton}>Sign in</Text></TouchableOpacity>
-                </View>
-            </ScrollView>
-        )
+                        <View style={styles.signupTextCont}>
+                            <Text style={styles.signupText}>Already have an account? </Text>
+                            <TouchableOpacity onPress={this.goBack}><Text style={styles.signupButton}>Sign in</Text></TouchableOpacity>
+                        </View>
+                    </ScrollView>
+                )}
+        </>
     }
 }
 

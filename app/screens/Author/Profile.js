@@ -27,7 +27,8 @@ export default class Profile extends Component {
             email,
             bio,
             language,
-            qualification
+            qualification,
+            imageUrl,
         } = this.state.profileDetails;
 
         return (
@@ -35,7 +36,7 @@ export default class Profile extends Component {
                 <Menu navigation={this.props.navigation} />
                 <View style={styles.container}>
                     <View style={styles.header}></View>
-                    <Image style={styles.avatar} source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar6.png' }} />
+                    <Image style={styles.avatar} source={{ uri: imageUrl }} />
                     <View style={styles.body}>
                         <View style={styles.bodyContent}>
                             <Text style={styles.name}>{fullName}</Text>
@@ -83,19 +84,19 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 28,
-        fontWeight:'bold',
+        fontWeight: 'bold',
         color: "#000000",
         fontWeight: "600"
     },
     info: {
         fontSize: 20,
-        fontWeight:'bold',
+        fontWeight: 'bold',
         color: "#000000",
         marginTop: 10,
     },
     description: {
         fontSize: 16,
-        fontWeight:'bold',
+        fontWeight: 'bold',
         color: "#000000",
         marginTop: 10,
         textAlign: 'center'

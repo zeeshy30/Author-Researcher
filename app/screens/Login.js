@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import LoadingScreen from '../components/LoadingScreen';
 
 import { Actions } from 'react-native-router-flux';
 
@@ -17,6 +18,7 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            processing: false,
             email: '',
             password: '',
         }
@@ -39,34 +41,8 @@ export default class Login extends Component {
             Alert.alert('Enter details to Login!')
             return;
         }
-        // if (this.state.email=='admin@gmail.com')
-        // {
-        //     Actions.admindashboard();
-        //     return
-        // }
 
-        // firebase
-        //     .auth()
-        //     .signInWithEmailAndPassword(this.state.email, this.state.password)
-        //     .then(res => {
-        //         firebase.firestore().collection('Users').where('id', '==', res.user.uid).get()
-        //             .then(snapshot => {
-        //                 snapshot.forEach(doc => {
-        //                     const details = doc.data();
-        //                     details.docID = doc.id;
-        //                     alert('abc')
-        //                     AsyncStorage.setItem('loginDetails', JSON.stringify(details));
-        //                 });
-        //                 if (this.state.email=='admin@gmail.com')
-        //                 {
-        //                     Actions.admindashboard();
-        //                 }
-        //                 else{
-        //                 Actions.dashboard();
-        //                 }
-        //             });
-        //     })
-        //     .catch(error => alert(error));
+
         try {
             const res = await firebase
                 .auth()
@@ -74,45 +50,56 @@ export default class Login extends Component {
             const doc = await firebase.firestore().collection('Users').doc(res.user.uid).get()
             const details = doc.data();
             details.docID = doc.id;
+            try {
+                if (details.imageName)
+                    details.imageUrl = await firebase.storage()
+                        .ref(details.imageName)
+                        .getDownloadURL();
+            } catch (err) { }
             await AsyncStorage.setItem('loginDetails', JSON.stringify(details));
             Actions.dashboard();
         } catch (err) {
+            this.setState({ processing: false });
             alert(err);
         };
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                <Text>{'\n'}</Text>
-                <Text>{'\n'}</Text>
-                <Image source={require('../logo.png')} />
-                <Text>{'\n'}</Text>
-                <Text>{'\n'}</Text>
-                <View style={styles.formContainer}>
-                    <Form
-                        placeholder="Email"
-                        onUpdate={this.setEmail}
-                        onSubmitEditing={() => this.password.focus()}
-                        ref={(input) => this.email = input}
-                        value={this.state.email}
-                    />
-                    <Form
-                        placeholder="Password"
-                        secureTextEntry={true}
-                        onUpdate={this.setPassword}
-                        ref={(input) => this.password = input}
-                        value={this.state.password}
-                    />
-                </View>
-                <Button onPress={this.Login} text="Login" />
+        return <>
+            {this.state.processing
+                ? <LoadingScreen /> : (
+                    <View style={styles.container}>
+                        <Text>{'\n'}</Text>
+                        <Text>{'\n'}</Text>
+                        <Image source={require('../logo.png')} />
+                        <Text>{'\n'}</Text>
+                        <Text>{'\n'}</Text>
+                        <View style={styles.formContainer}>
+                            <Form
+                                placeholder="Email"
+                                onUpdate={this.setEmail}
+                                onSubmitEditing={() => this.password.focus()}
+                                ref={(input) => this.email = input}
+                                value={this.state.email}
+                            />
+                            <Form
+                                placeholder="Password"
+                                secureTextEntry={true}
+                                onUpdate={this.setPassword}
+                                ref={(input) => this.password = input}
+                                value={this.state.password}
+                            />
+                        </View>
+                        <Button onPress={() => this.setState({ processing: true }, this.Login)} text="Login" />
 
-                <View style={styles.signupTextCont}>
-                    <Text style={styles.signupText}>Dont have an account yet? </Text>
-                    <TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}>Signup</Text></TouchableOpacity>
-                </View>
-            </View>
-        )
+                        <View style={styles.signupTextCont}>
+
+                            <Text style={styles.signupText}>Dont have an account yet? </Text>
+                            <TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}>Signup</Text></TouchableOpacity>
+                        </View>
+                    </View>
+                )}
+        </>
     }
 }
 
