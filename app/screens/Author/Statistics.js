@@ -1,35 +1,122 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Menu from '../../components/Menu';
 import { Dropdown } from 'react-native-material-dropdown';
+import Icon from 'react-native-vector-icons/AntDesign';
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-community/async-storage';
+import { fontSizes } from '../../BaseStyles';
+
 
 export default class Statistics extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: true,
+            references: [],
+            quotes: [],
+            showViewsPerReference: false,
+            showQuotesPerReference: false,
+        }
+    }
+
+    componentDidMount() {
+        this.fetchData()
+    }
+
+    fetchData = async () => {
+        try {
+            let loginDetails = await AsyncStorage.getItem('loginDetails');
+            loginDetails = JSON.parse(loginDetails);
+            let promises = [];
+            for (const index in loginDetails.references) {
+                promises.push(firebase.firestore().collection('References').doc(loginDetails.references[index]).get());
+            }
+            const referencesSnap = await Promise.all(promises);
+
+            promises = []
+            const referenceData = referencesSnap.map(doc => {
+                const data = doc.data();
+                data.id = doc.id;
+                for (const index in data.quotes) {
+                    promises.push(firebase.firestore().collection('Quotes').doc(data.quotes[index]).get());
+                }
+                return data;
+            });
+
+            const quotesSnap = await Promise.all(promises);
+            const quotesData = quotesSnap.map(doc => {
+                const data = doc.data();
+                data.id = doc.id;
+                return doc.data();
+            });
+            this.setState({ references: referenceData, quotes: quotesData, loading: false });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+    numOfReferences = () => {
+        return this.state.references.length;
+    }
+
+    getNumberOfViews = () => {
+        return this.state.references.map(ref => {
+            return ref.views.length
+        }).reduce((acc, val) => acc + val);
+    }
+
+    getNumberOfViewsPerReference = () => {
+        return this.state.references.map(ref =>
+            <Text style={styles.text}> {ref.title} : {ref.views.length}</Text>
+        );
+    }
+
+    getNumberOfQuotesPerReference = () => {
+        return this.state.references.map(ref =>
+            <Text style={styles.text}> {ref.title} : {ref.quotes.length}</Text>
+        );
+    }
+
+    getNumberOfQuotes = () => {
+        return this.state.references.map(ref => {
+            return ref.quotes.length
+        }).reduce((acc, val) => acc + val);
+    }
 
     render() {
+        const { showViewsPerReference, showQuotesPerReference } = this.state;
         return (
             <>
                 <Menu navigation={this.props.navigation} />
-                <View >
-                    <Text style={styles.text}>Number of References : 50</Text>
-                    <Text style={styles.text}>Number of Views :50 </Text>
-                    <Dropdown
-                        containerStyle={styles.dropdownStyle}
-                        pickerStyle={styles.pickerStyle}
-                        label='Select Number of Views per reference'
-                        data={[{ value: 'A' }, { value: 'B' }]}
-                        onChangeText={value => this.setState({ View_per_reference: value })}
-                    />
-                    <Text style={styles.text}>Views : 50</Text>
-                    <Text style={styles.text}>Number of Quotes : 50</Text>
-                    <Dropdown
-                        containerStyle={styles.dropdownStyle}
-                        pickerStyle={styles.pickerStyle}
-                        label='Number of Quotes per Reference'
-                        data={[{ value: 'A' }, { value: 'B' }]}
-                        onChangeText={value => this.setState({ Quote_per_reference: value })}
-                    />
-                    <Text style={styles.text}>Quotes : 50</Text>
-                </View>
+                {this.state.loading ? <Text> loading... </Text> :
+                    <View >
+                        <Text style={styles.text}>Number of References : {this.numOfReferences()}</Text>
+                        <Text style={styles.text}>Number of Views : {this.getNumberOfViews()} </Text>
+                        <Text style={styles.text}>Number of Quotes : {this.getNumberOfQuotes()}</Text>
+                        <TouchableOpacity
+                            style={styles.dropdownStyle}
+                            onPress={() => this.setState({ showViewsPerReference: !showViewsPerReference })}
+                        >
+                            <Text style={{ fontSize: fontSizes.large }}>{
+                                showViewsPerReference ? 'Hide' : 'Show'} Views Per Reference <Icon name='down' size={20} />
+                            </Text>
+                            {showViewsPerReference && this.getNumberOfViewsPerReference()}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.dropdownStyle}
+                            onPress={() => this.setState({ showQuotesPerReference: !showQuotesPerReference })}
+                        >
+                            <Text style={{ fontSize: fontSizes.large }}>{
+                                showQuotesPerReference ? 'Hide' : 'Show'} Quotes Per Reference <Icon name='down' size={20} />
+                            </Text>
+                            {showQuotesPerReference && this.getNumberOfQuotesPerReference()}
+                        </TouchableOpacity>
+                    </View>
+                }
             </>
         )
     }
@@ -41,35 +128,20 @@ const styles = StyleSheet.create({
 
 
     text: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginTop: 20,
+        width: '100%',
+        fontSize: fontSizes.large,
+        marginTop: 10,
         backgroundColor: 'white',
         textAlign: 'center',
-        marginLeft: 10,
-        marginRight: 10,
         justifyContent: 'center',
         alignItems: 'center'
     },
     dropdownStyle: {
-        width: 390,
-        borderRadius: 1,
-        backgroundColor: 'white',
-        paddingHorizontal: 16,
-        marginVertical: 10,
-        marginLeft: 10,
-        marginLeft: 10,
-        marginTop: 20,
-        fontSize: 30,
-        fontWeight: 'bold',
-    },
-    pickerStyle: {
-        width: 390,
-        borderRadius: 25,
-        backgroundColor: 'white',
-        paddingHorizontal: 16,
-        marginVertical: 10,
-        fontSize: 30,
-        fontWeight: 'bold',
+        width: '100%',
+        alignSelf: 'center',
+        alignItems: 'center',
+        backgroundColor: 'green',
+        marginTop: 10,
+        fontSize: fontSizes.large,
     },
 });
