@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux';
 import firebase from '@react-native-firebase/app';
@@ -17,7 +17,6 @@ import AdminDashboard from './screens/AdminDashboard';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default Routes = () => {
-    // const [processing, setProcessing] = useState(false);
 
     logout = async () => {
         await AsyncStorage.clear();

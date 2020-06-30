@@ -46,7 +46,7 @@ export default class Signup extends Component {
     }
 
     goBack() {
-        Actions.pop();
+        Actions.login();
     }
 
     setName = val => {
