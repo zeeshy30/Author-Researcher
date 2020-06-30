@@ -35,7 +35,8 @@ export default class AddReference extends Component {
     }
 
     save = async () => {
-
+        if (this.state.saving)
+            return;
         try {
             this.setState({ saving: true });
 
@@ -74,17 +75,27 @@ export default class AddReference extends Component {
             await Promise.all(promises);
             let loginDetails = await AsyncStorage.getItem('loginDetails');
             loginDetails = JSON.parse(loginDetails);
-            firebase.firestore().collection('References').add({
+            const refAdded = await firebase.firestore().collection('References').add({
                 authorDetails: loginDetails,
                 summary: referenceSummary,
                 title,
-                rating: 0,
-                views: 0,
-                likes: 0,
+                rating: {},
+                views: [],
+                likeBy: [],
                 documentName: title + '/' + userID + '-' + fileName,
                 imagesNames: this.formatImagesName(),
                 quotes,
             });
+
+            firebase.firestore().collection('Users').doc(loginDetails.docID).update({
+                // ...loginDetails,
+                references: loginDetails.references ? [...loginDetails.references, refAdded.id] : [refAdded.id],
+            });
+
+            AsyncStorage.setItem('loginDetails', JSON.stringify({
+                ...loginDetails,
+                references: loginDetails.references ? [...loginDetails.references, refAdded.id] : [refAdded.id]
+            }));
 
             this.setState({
                 title: '',
@@ -158,8 +169,8 @@ export default class AddReference extends Component {
         }
     }
 
-    addQuote = (val, clearState) => {
-        this.setState({ quotes: [...this.state.quotes, val] }, clearState)
+    addQuote = (quoteId, clearState) => {
+        this.setState({ quotes: [...this.state.quotes, quoteId] }, clearState)
     }
 
     goBack = () => {

@@ -34,39 +34,51 @@ export default class Login extends Component {
         Actions.signup()
     }
 
-    Login = () => {
+    Login = async () => {
         if (this.state.email === '' || this.state.password === '') {
             Alert.alert('Enter details to Login!')
             return;
         }
-        if (this.state.email=='admin@gmail.com')
-        {
-            Actions.admindashboard();
-            return
-        }
+        // if (this.state.email=='admin@gmail.com')
+        // {
+        //     Actions.admindashboard();
+        //     return
+        // }
 
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(this.state.email, this.state.password)
-            .then(res => {
-                firebase.firestore().collection('Users').where('id', '==', res.user.uid).get()
-                    .then(snapshot => {
-                        snapshot.forEach(doc => {
-                            const details = doc.data();
-                            details.docID = doc.id;
-                            alert('abc')
-                            AsyncStorage.setItem('loginDetails', JSON.stringify(details));
-                        });
-                        if (this.state.email=='admin@gmail.com')
-                        {
-                            Actions.admindashboard();
-                        }
-                        else{
-                        Actions.dashboard();
-                        }
-                    });
-            })
-            .catch(error => alert(error));
+        // firebase
+        //     .auth()
+        //     .signInWithEmailAndPassword(this.state.email, this.state.password)
+        //     .then(res => {
+        //         firebase.firestore().collection('Users').where('id', '==', res.user.uid).get()
+        //             .then(snapshot => {
+        //                 snapshot.forEach(doc => {
+        //                     const details = doc.data();
+        //                     details.docID = doc.id;
+        //                     alert('abc')
+        //                     AsyncStorage.setItem('loginDetails', JSON.stringify(details));
+        //                 });
+        //                 if (this.state.email=='admin@gmail.com')
+        //                 {
+        //                     Actions.admindashboard();
+        //                 }
+        //                 else{
+        //                 Actions.dashboard();
+        //                 }
+        //             });
+        //     })
+        //     .catch(error => alert(error));
+        try {
+            const res = await firebase
+                .auth()
+                .signInWithEmailAndPassword(this.state.email, this.state.password);
+            const doc = await firebase.firestore().collection('Users').doc(res.user.uid).get()
+            const details = doc.data();
+            details.docID = doc.id;
+            await AsyncStorage.setItem('loginDetails', JSON.stringify(details));
+            Actions.dashboard();
+        } catch (err) {
+            alert(err);
+        };
     }
 
     render() {

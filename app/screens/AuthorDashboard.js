@@ -1,6 +1,8 @@
-import * as React from 'react';
+import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { Actions } from 'react-native-router-flux';
+
 import {
     createDrawerNavigator,
     DrawerContentScrollView,
@@ -12,6 +14,9 @@ import {
     Caption,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-community/async-storage';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
 
 import Profile from './Author/Profile';
 import Statistics from './Author/Statistics';
@@ -20,6 +25,13 @@ import Earning from './Author/Earning';
 
 function CustomDrawerContent(props) {
     const { navigate } = props.navigation;
+
+    const logout = () => {
+        AsyncStorage.clear();
+        firebase.auth().signOut();
+        Actions.initialscreen();
+    };
+
     return (
         <DrawerContentScrollView {...props}>
             <View
@@ -35,8 +47,8 @@ function CustomDrawerContent(props) {
                         }}
                         size={50}
                     />
-                    <Title style={styles.title}>Dawid Urbaniak</Title>
-                    <Caption style={styles.caption}>@trensik</Caption>
+                    <Title style={styles.title}>{props.fullName}</Title>
+                    <Caption style={styles.caption}>{props.email}</Caption>
                 </View>
             </View>
             <DrawerItem icon={({ color, size }) => (
@@ -71,27 +83,35 @@ function CustomDrawerContent(props) {
             )}
                 label="Earning"
                 onPress={() => { navigate('Earning') }} />
+            <DrawerItem icon={({ color, size }) => (
+                <Icon name="logout"
+                    color={color}
+                    size={size}
+                />
+            )}
+                label="Log Out"
+                onPress={logout}/>
         </DrawerContentScrollView>
     );
 }
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer() {
+function MyDrawer(parentProps) {
     return (
-        <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
+        <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} fullName={parentProps.fullName} email={parentProps.email} />}>
             <Drawer.Screen name="Profile" component={Profile} />
             <Drawer.Screen name="Statistics" component={Statistics} />
             <Drawer.Screen name="AddReference" component={AddReference} />
             <Drawer.Screen name="Earning" component={Earning} />
-        </Drawer.Navigator>
+        </Drawer.Navigator >
     );
 }
 
-export default function AuthorDashboard() {
+export default function AuthorDashboard(props) {
     return (
         <NavigationContainer>
-            <MyDrawer />
+            <MyDrawer {...props} />
         </NavigationContainer>
     );
 }

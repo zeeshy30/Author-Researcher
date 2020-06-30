@@ -5,6 +5,9 @@ import {
 } from 'react-native';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/firestore';
+
 import Textarea from '../../components/Textarea';
 import { colors, fontSizes } from '../../BaseStyles';
 
@@ -36,7 +39,14 @@ export default class AddQuote extends Component {
     }
 
     save = () => {
-        this.props.onAddQuote({ ...this.state }, this.clearState);
+        firebase.firestore().collection('Quotes').add({
+            ...this.state,
+            rating: 0,
+            likedBy: [],
+            ratedBy: [],
+        }).then(doc => {
+            this.props.onAddQuote(doc.id, this.clearState);
+        })
     }
 
     clearState = () => {
