@@ -21,7 +21,7 @@ export default textarea = props => {
 
 const styles = StyleSheet.create({
     textareaContainer: {
-        width: '80%',
+        width: 300,
         backgroundColor: '#F2F3F4',
         borderRadius: 25,
         paddingHorizontal: 16,

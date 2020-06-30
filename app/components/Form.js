@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         fontWeight:'bold'
     },
     inputBox: {
-        width: '80%',
+        width: 300,
         borderRadius: 25,
         paddingHorizontal: 16,
         backgroundColor:'#F2F3F4',
