@@ -27,21 +27,21 @@ export default class Dashboard extends Component {
                     ? (<LoadingScreen />) :
                     < View style={styles.container}>
                         <TouchableOpacity
-                            style={styles.ResearcherButton}
+                            style={styles.Button}
                             onPress={() => Actions.authorcontrolpanel(this.state.userDetails)}
                         >
                             <Text style={styles.signupButton}>Author</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={styles.ResearcherButton}
+                            style={styles.Button}
                             onPress={() => Actions.search()}
                         >
                             <Text style={styles.signupButton}>Researcher</Text>
                         </TouchableOpacity>
 
                         {this.state.userDetails.isAdmin && <TouchableOpacity
-                            style={styles.ResearcherButton}
+                            style={styles.Button}
                             onPress={() => Actions.admindashboard()}
                         >
                             <Text style={styles.signupButton}>Admin</Text>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 
     },
 
-    ResearcherButton: {
+    Button: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
