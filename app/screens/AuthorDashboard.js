@@ -26,9 +26,9 @@ import Earning from './Author/Earning';
 function CustomDrawerContent(props) {
     const { navigate } = props.navigation;
 
-    const logout = () => {
-        AsyncStorage.clear();
-        firebase.auth().signOut();
+    const logout = async () => {
+        await AsyncStorage.clear();
+        await firebase.auth().signOut();
         Actions.initialscreen();
     };
 
@@ -42,8 +42,7 @@ function CustomDrawerContent(props) {
                 <View style={styles.userInfoSection}>
                     <Avatar.Image
                         source={{
-                            uri:
-                                'https://pbs.twimg.com/profile_images/952545910990495744/b59hSXUd_400x400.jpg',
+                            uri: props.profileImageUrl,
                         }}
                         size={50}
                     />
@@ -90,7 +89,7 @@ function CustomDrawerContent(props) {
                 />
             )}
                 label="Log Out"
-                onPress={logout}/>
+                onPress={logout} />
         </DrawerContentScrollView>
     );
 }
@@ -99,7 +98,14 @@ const Drawer = createDrawerNavigator();
 
 function MyDrawer(parentProps) {
     return (
-        <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} fullName={parentProps.fullName} email={parentProps.email} />}>
+        <Drawer.Navigator drawerContent={props =>
+            <CustomDrawerContent
+                {...props}
+                fullName={parentProps.fullName}
+                email={parentProps.email}
+                profileImageUrl={parentProps.imageUrl}
+            />}
+        >
             <Drawer.Screen name="Profile" component={Profile} />
             <Drawer.Screen name="Statistics" component={Statistics} />
             <Drawer.Screen name="AddReference" component={AddReference} />

@@ -4,6 +4,7 @@ import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icons from "react-native-vector-icons/MaterialIcons"
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/storage';
@@ -88,7 +89,6 @@ export default class AddReference extends Component {
             });
 
             firebase.firestore().collection('Users').doc(loginDetails.docID).update({
-                // ...loginDetails,
                 references: loginDetails.references ? [...loginDetails.references, refAdded.id] : [refAdded.id],
             });
 
@@ -187,6 +187,11 @@ export default class AddReference extends Component {
         return (
             <>
                 <Menu navigation={this.props.navigation} />
+                <Spinner
+                    visible={this.state.saving}
+                    textContent={'Saving...'}
+                    textStyle={styles.spinnerTextStyle}
+                />
                 {this.state.addQuote ?
                     (<AddQuote onAddQuote={this.addQuote} goBack={this.goBack} />)
                     : (<View style={styles.container}>
@@ -221,8 +226,10 @@ export default class AddReference extends Component {
                             (<Text> Add Pictures </Text>) :
                             this.getImagesNamesJSX()
                         }
-                        <Button onPress={() => this.setState({ addQuote: true })} text='Add A Quote' />
-                        <Button onPress={this.save} text='Submit' />
+                        <View>
+                            <Button style={{ backgroundColor: '#08B4C5', }} onPress={() => this.setState({ addQuote: true })} text='Add A Quote' />
+                            <Button style={{ backgroundColor: '#ffffff', }} onPress={this.save} text='Submit' />
+                        </View>
                     </View>
                     )}
             </>
@@ -243,5 +250,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         marginVertical: 10
-    }
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
+    },
 })

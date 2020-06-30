@@ -22,17 +22,19 @@ export default textarea = props => {
 const styles = StyleSheet.create({
     textareaContainer: {
         width: 300,
-        backgroundColor: '#eeeeee',
+        backgroundColor: '#F2F3F4',
         borderRadius: 25,
         paddingHorizontal: 16,
         fontSize: fontSizes.normal,
-        color: colors.inputBox,
         marginVertical: 10,
+        opacity: 0.5
     },
     textarea: {
         textAlignVertical: 'top',  // hack android
         height: 170,
         fontSize: fontSizes.normal,
-        color: colors.inputText,
+        color:'#000000',
+        backgroundColor: '#F2F3F4',
+        opacity: 1
     },
 });

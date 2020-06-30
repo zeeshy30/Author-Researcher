@@ -9,12 +9,14 @@ import '@react-native-firebase/storage';
 import '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Dropdown } from 'react-native-material-dropdown';
+import LoadingScreen from '../components/LoadingScreen';
 
 
 export default class Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: true,
             search: '',
             References: [],
             userID: '',
@@ -79,9 +81,10 @@ export default class Search extends React.Component {
             });
             let loginDetails = await loginDetailsPromise;
             loginDetails = JSON.parse(loginDetails);
-            this.setState({ References: ReferenceTileProps, userID: loginDetails.docID });
+            this.setState({ References: ReferenceTileProps, userID: loginDetails.docID, loading: false });
         }
         catch (err) {
+            this.setState({ loading: false });
             alert(err);
         }
     }
@@ -117,7 +120,7 @@ export default class Search extends React.Component {
                     fontColor={colors.inputText}
                     lightTheme
                     containerStyle={{
-                        backgroundColor: 'white',
+                        backgroundColor: '#F2F3F4',
                         padding: 0,
                         width: '90%',
                         margin: 20,
@@ -130,10 +133,11 @@ export default class Search extends React.Component {
                     data={[{ value: 'Author' }, { value: 'Reference' }, { value: 'Quote' }]}
                     onChangeText={value => this.setState({ filterBy: value })}
                 />
+
                 {References.length
                     ? (filteredReferences.map((ref, index) =>
                         <ReferenceTile key={index} {...ref} userID={userID} />))
-                    : (<Text> loading...</Text>)}
+                    : (<LoadingScreen />)}
             </ScrollView>
         );
     }

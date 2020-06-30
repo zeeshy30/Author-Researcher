@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux';
 import firebase from '@react-native-firebase/app';
@@ -14,14 +14,14 @@ import Admin from './screens/Admin';
 import Income from './screens/Income';
 import AdminDashboard from './screens/AdminDashboard';
 
-import { fontSizes } from './BaseStyles';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default Routes = () => {
+    // const [processing, setProcessing] = useState(false);
 
-    logout = () => {
-        AsyncStorage.clear();
-        firebase.auth().signOut();
+    logout = async () => {
+        await AsyncStorage.clear();
+        await firebase.auth().signOut();
         Actions.login();
     };
 
@@ -36,14 +36,14 @@ export default Routes = () => {
     return (
         <Router barButtonIconStyle={styles.barButtonIconStyle}
             hideNavBar={false}
-            navigationBarStyle={{ backgroundColor: '#1565c0', }}
-            titleStyle={{ color: 'white', }}
+            navigationBarStyle={{ backgroundColor: '#F2F3F4', }}
+            titleStyle={{ color: 'black', fontWeight: 'bold' }}
         >
             <Stack key="root">
                 <Scene key="initialscreen" component={InitialScreen} title="Loader" hideNavBar />
                 <Scene key="login" component={Login} title="Login" type="replace" />
                 <Scene key="dashboard" component={Dashboard} title="Dashboard" type="replace" renderRightButton={signoutButton} />
-                <Scene key="signup" component={Signup} title="Sign up" />
+                <Scene key="signup" component={Signup} title="Sign up" type="replace" />
                 <Scene key="search" component={Search} title="Search" />
                 <Scene key="authorcontrolpanel" component={AuthorDashboard} title="Control Panel" hideNavBar />
                 <Scene key="admindashboard" component={AdminDashboard} title="AdminDashboard" />
@@ -61,7 +61,8 @@ const styles = {
         tintColor: 'white'
     },
     buttonText: {
-        color: 'white',
-        fontSize: fontSizes.normal,
+        color: 'black',
+        fontSize: 20,
+        fontWeight: 'bold',
     }
 }

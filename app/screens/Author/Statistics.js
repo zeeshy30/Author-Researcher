@@ -8,6 +8,7 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
 import { fontSizes } from '../../BaseStyles';
+import LoadingScreen from '../../components/LoadingScreen';
 
 
 export default class Statistics extends Component {
@@ -64,9 +65,10 @@ export default class Statistics extends Component {
     }
 
     getNumberOfViews = () => {
-        return this.state.references.map(ref => {
-            return ref.views.length
-        }).reduce((acc, val) => acc + val);
+        return this.state.references.length &&
+            this.state.references.map(ref => {
+                return ref.views.length
+            }).reduce((acc, val) => acc + val);
     }
 
     getNumberOfViewsPerReference = () => {
@@ -82,7 +84,7 @@ export default class Statistics extends Component {
     }
 
     getNumberOfQuotes = () => {
-        return this.state.references.map(ref => {
+        return this.state.references.length && this.state.references.map(ref => {
             return ref.quotes.length
         }).reduce((acc, val) => acc + val);
     }
@@ -92,26 +94,26 @@ export default class Statistics extends Component {
         return (
             <>
                 <Menu navigation={this.props.navigation} />
-                {this.state.loading ? <Text> loading... </Text> :
+                {this.state.loading ? <LoadingScreen /> :
                     <View >
                         <Text style={styles.text}>Number of References : {this.numOfReferences()}</Text>
                         <Text style={styles.text}>Number of Views : {this.getNumberOfViews()} </Text>
                         <Text style={styles.text}>Number of Quotes : {this.getNumberOfQuotes()}</Text>
                         <TouchableOpacity
                             style={styles.dropdownStyle}
-                            onPress={() => this.setState({ showViewsPerReference: !showViewsPerReference })}
+                            onPress={() => this.setState({ showViewsPerReference: !showViewsPerReference, showQuotesPerReference: false })}
                         >
                             <Text style={{ fontSize: fontSizes.large }}>{
-                                showViewsPerReference ? 'Hide' : 'Show'} Views Per Reference <Icon name='down' size={20} />
+                                showViewsPerReference ? 'Hide' : 'Show'} Views Per Reference <Icon name={showViewsPerReference ? 'up' : 'down'} size={20} />
                             </Text>
                             {showViewsPerReference && this.getNumberOfViewsPerReference()}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.dropdownStyle}
-                            onPress={() => this.setState({ showQuotesPerReference: !showQuotesPerReference })}
+                            onPress={() => this.setState({ showQuotesPerReference: !showQuotesPerReference, showViewsPerReference: false })}
                         >
                             <Text style={{ fontSize: fontSizes.large }}>{
-                                showQuotesPerReference ? 'Hide' : 'Show'} Quotes Per Reference <Icon name='down' size={20} />
+                                showQuotesPerReference ? 'Hide' : 'Show'} Quotes Per Reference <Icon name={showQuotesPerReference? 'up' : 'down'} size={20} />
                             </Text>
                             {showQuotesPerReference && this.getNumberOfQuotesPerReference()}
                         </TouchableOpacity>
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
         width: '100%',
         alignSelf: 'center',
         alignItems: 'center',
-        backgroundColor: 'green',
+        backgroundColor: '#08B4C5',
         marginTop: 10,
         fontSize: fontSizes.large,
     },

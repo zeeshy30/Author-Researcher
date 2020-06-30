@@ -4,9 +4,11 @@ import {
     View, Text
 } from 'react-native';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/firestore';
+
 
 import Textarea from '../../components/Textarea';
 import { colors, fontSizes } from '../../BaseStyles';
@@ -16,6 +18,7 @@ export default class AddQuote extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            processing: false,
             quoteIdea: '',
             quotation: '',
             price: '',
@@ -39,11 +42,11 @@ export default class AddQuote extends Component {
     }
 
     save = () => {
+        this.setState({ processing: true });
         firebase.firestore().collection('Quotes').add({
             ...this.state,
-            rating: 0,
+            rating: {},
             likedBy: [],
-            ratedBy: [],
         }).then(doc => {
             this.props.onAddQuote(doc.id, this.clearState);
         })
@@ -55,12 +58,18 @@ export default class AddQuote extends Component {
             quotation: '',
             price: '',
             bookPage: '',
+            processing: false
         });
     }
 
     render() {
         return (
             <View style={styles.inputContainer}>
+                <Spinner
+                    visible={this.state.processing}
+                    textContent={'Saving...'}
+                    textStyle={styles.spinnerTextStyle}
+                />
                 <Textarea
                     placeholder="Quote"
                     value={this.state.quotation}
@@ -115,5 +124,8 @@ const styles = StyleSheet.create({
         height: 60,
         fontSize: fontSizes.normal,
         color: colors.inputText,
-    }
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
+    },
 });

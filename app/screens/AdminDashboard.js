@@ -40,12 +40,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 300,
-        backgroundColor: '#f2f2f2',
+        backgroundColor: '#08B4C5',
         borderRadius: 25,
         marginVertical: 25,
     },
     signupButton: {
-        color: colors.inputText,
+        color: 'white',
         fontSize: fontSizes.large,
         fontWeight: 'bold',
         fontSize: 30

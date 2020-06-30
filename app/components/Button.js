@@ -14,14 +14,14 @@ export default Button = props => {
 const styles = StyleSheet.create({
     button: {
         width: 300,
-        backgroundColor: colors.button,
+        backgroundColor: '#08B4C5',
         borderRadius: 25,
         marginVertical: 10,
         paddingVertical: 12
     },
     buttonText: {
-        fontSize: fontSizes.normal,
-        fontWeight: '500',
+        fontSize: 20,
+        fontWeight: 'bold',
         color: '#ffffff',
         textAlign: 'center'
     }
