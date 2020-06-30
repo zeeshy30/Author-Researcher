@@ -19,6 +19,7 @@ import Form from '../components/Form';
 import Textarea from '../components/Textarea';
 import Button from '../components/Button';
 import { colors, fontSizes } from '../BaseStyles';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Signup extends Component {
     constructor(props) {
@@ -84,8 +85,7 @@ export default class Signup extends Component {
                 res.user.updateProfile({
                     displayName: fullName,
                 });
-                firebase.firestore().collection('Users').add({
-                    id: res.user.uid,
+                firebase.firestore().collection('Users').doc(res.user.uid).set({
                     email,
                     fullName,
                     bio,
@@ -93,8 +93,11 @@ export default class Signup extends Component {
                     language,
                     qualification,
                     dateOfBirth: date,
+                }).then(() => {
+                    Actions.initialscreen();
+                }).catch(err => {
+                    alert(err);
                 });
-                Actions.initialscreen();
             })
             .catch(error => alert(error));
     }
@@ -117,7 +120,7 @@ export default class Signup extends Component {
                     />
                     <Textarea
                         placeholder="Bio"
-                        onUpdate={val => this.setState({bio: val})}
+                        onUpdate={val => this.setState({ bio: val })}
                         value={this.state.bio}
                     />
                     <DatePicker

@@ -44,15 +44,13 @@ export default class Login extends Component {
             .auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
             .then(res => {
-                firebase.firestore().collection('Users').where('id', '==', res.user.uid).get()
-                    .then(snapshot => {
-                        snapshot.forEach(doc => {
-                            const details = doc.data();
-                            details.docID = doc.id;
-                            AsyncStorage.setItem('loginDetails', JSON.stringify(details));
-                        });
-                        Actions.dashboard();
+                firebase.firestore().collection('Users').doc(res.user.uid).get()
+                    .then(doc => {
+                        const details = doc.data();
+                        details.docID = doc.id;
+                        AsyncStorage.setItem('loginDetails', JSON.stringify(details));
                     });
+                Actions.dashboard();
             })
             .catch(error => alert(error));
     }

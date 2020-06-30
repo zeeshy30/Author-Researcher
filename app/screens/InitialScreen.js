@@ -19,13 +19,11 @@ export default class InitialScreen extends Component {
     fetchData = () => {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                firebase.firestore().collection('Users').where('id', '==', user.uid).get()
-                    .then(snapshot => {
-                        snapshot.forEach(doc => {
-                            const details = doc.data();
-                            details.docID = doc.id;
-                            AsyncStorage.setItem('loginDetails', JSON.stringify(details));
-                        });
+                firebase.firestore().collection('Users').doc(user.uid).get()
+                    .then(doc => {
+                        const details = doc.data();
+                        details.docID = doc.id;
+                        AsyncStorage.setItem('loginDetails', JSON.stringify(details));
                     });
                 Actions.dashboard();
             } else {

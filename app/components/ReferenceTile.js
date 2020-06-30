@@ -2,26 +2,40 @@ import React, { useState } from 'react';
 import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import Icons from 'react-native-vector-icons/Entypo';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Communications from 'react-native-communications';
 import { SliderBox } from "react-native-image-slider-box";
-import QuoteTile from './QuoteTile';
 
-/*
-props : {
-    images,
-    title,
-    authorname,
-    authorbio,
-    book summary,
-    rating,
-    authoremail,
-    bookvideo,
-}
-*/
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/firestore';
+
+import QuoteTile from './QuoteTile';
+import RatingDialog from './RateDialog';
 
 
 export default ReferenceTile = props => {
     const [showQuotes, setShowQuote] = useState(false);
+    const [showRatingDialog, setShowRatingDialog] = useState(false);
+    const [rating, setRating] = useState(props.rating);
+    const showReviewButton = props.userID !== props.authorID;
+
+    const addRating = (refID, userID, ratingGiven) => {
+        const rate = {}
+        rate[userID] = ratingGiven;
+        firebase.firestore().collection('References').doc(refID).update({
+            rating: { ...props.rating, ...rate },
+        });
+        setShowRatingDialog(false);
+        setRating({ ...rating, ...rate });
+    };
+
+    const totalRating = () => {
+        if (Object.keys(rating).length === 0)
+            return 0;
+        const sum = Object.values(rating).reduce((acc, val) => acc + val);
+        return sum / Object.keys(rating).length;
+    };
 
     return (
         <View style={styles.tileContainer}>
@@ -32,7 +46,7 @@ export default ReferenceTile = props => {
                     imageSize={16}
                     showRating={false}
                     fractions={1}
-                    startingValue={props.rating}
+                    startingValue={totalRating()}
                     readonly
                 />}
                 <View style={styles.col}>
@@ -46,6 +60,21 @@ export default ReferenceTile = props => {
                     <Icons name='controller-play' color='orange' size={17} />
                 </View>
                 <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.title} ({props.authorName}) </Text>
+                {(showReviewButton && !showQuotes) && (<>
+                    <Icon
+                        style={{ marginLeft: 5 }}
+                        name='rate-review'
+                        color='orange'
+                        onPress={() => setShowRatingDialog(true)}
+                        size={17}
+                    />
+                    <RatingDialog
+                        showDialog={showRatingDialog}
+                        closeDialog={() => setShowRatingDialog(false)}
+                        initialValue={rating[props.userID] ? rating[props.userID] : 0}
+                        onSubmit={rating => addRating(props.id, props.userID, rating)}
+                    />
+                </>)}
             </TouchableOpacity>
             {showQuotes === false
                 ? (<View style={styles.row}>
@@ -63,7 +92,11 @@ export default ReferenceTile = props => {
 
                     </ScrollView>
                 </View>) : (props.quotes.map((quote, index) => {
-                    return <QuoteTile key={index} {...quote} />
+                    return <QuoteTile
+                        key={index}
+                        {...quote}
+                        userID={props.userID}
+                        showReviewButton={showReviewButton} />
                 }
                 ))
             }
