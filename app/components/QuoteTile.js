@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFE6CD',
         padding: 5,
         margin: 5,
+        fontWeight:'bold'
     },
     row: {
         width: '100%',
@@ -53,11 +54,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 5,
+        fontWeight:'bold'
     },
     col: {
         marginRight: 10,
         marginLeft: 10,
         flexDirection: 'row',
+        fontWeight:'bold'
     },
     detailBox: {
         backgroundColor: '#FFCE9B',
@@ -68,6 +71,7 @@ const styles = StyleSheet.create({
         padding: 2.5,
         marginLeft: 5,
         zIndex: 999,
+        fontWeight:'bold'
     },
     price: {
         backgroundColor: 'grey',
@@ -77,5 +81,6 @@ const styles = StyleSheet.create({
         borderColor: '#000',
         padding: 2.5,
         marginLeft: 5,
+        fontWeight:'bold'
     }
 });

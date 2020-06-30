@@ -36,8 +36,8 @@ export default Routes = () => {
     return (
         <Router barButtonIconStyle={styles.barButtonIconStyle}
             hideNavBar={false}
-            navigationBarStyle={{ backgroundColor: '#1565c0', }}
-            titleStyle={{ color: 'white', }}
+            navigationBarStyle={{ backgroundColor: '#F2F3F4', }}
+            titleStyle={{ color: 'black',fontweight:'bold' }}
         >
             <Stack key="root">
                 <Scene key="initialscreen" component={InitialScreen} title="Loader" hideNavBar />
@@ -61,7 +61,8 @@ const styles = {
         tintColor: 'white'
     },
     buttonText: {
-        color: 'white',
-        fontSize: fontSizes.normal,
+        color: 'black',
+        fontSize: 20,
+        fontweight:'bold',
     }
 }

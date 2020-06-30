@@ -39,6 +39,11 @@ export default class Login extends Component {
             Alert.alert('Enter details to Login!')
             return;
         }
+        if (this.state.email=='admin@gmail.com')
+        {
+            Actions.admindashboard();
+            return
+        }
 
         firebase
             .auth()
@@ -49,9 +54,16 @@ export default class Login extends Component {
                         snapshot.forEach(doc => {
                             const details = doc.data();
                             details.docID = doc.id;
+                            alert('abc')
                             AsyncStorage.setItem('loginDetails', JSON.stringify(details));
                         });
+                        if (this.state.email=='admin@gmail.com')
+                        {
+                            Actions.admindashboard();
+                        }
+                        else{
                         Actions.dashboard();
+                        }
                     });
             })
             .catch(error => alert(error));

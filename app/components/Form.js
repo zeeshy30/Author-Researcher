@@ -37,14 +37,17 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor:'#F2F3F4',
+        opacity: 0.5,
+        fontWeight:'bold'
     },
     inputBox: {
         width: 300,
-        backgroundColor: '#eeeeee',
         borderRadius: 25,
         paddingHorizontal: 16,
+        backgroundColor:'#F2F3F4',
         fontSize: fontSizes.normal,
-        color: colors.inputBox,
         marginVertical: 10,
+        
     }
 });

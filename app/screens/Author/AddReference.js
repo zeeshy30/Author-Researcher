@@ -210,8 +210,10 @@ export default class AddReference extends Component {
                             (<Text> Add Pictures </Text>) :
                             this.getImagesNamesJSX()
                         }
-                        <Button onPress={() => this.setState({ addQuote: true })} text='Add A Quote' />
-                        <Button onPress={this.save} text='Submit' />
+                        <View>
+                        <Button style = {{backgroundColor: '#08B4C5',}}onPress={() => this.setState({ addQuote: true })} text='Add A Quote' />
+                        <Button style = {{backgroundColor: '#ffffff',}} onPress={this.save} text='Submit' />
+                        </View>
                     </View>
                     )}
             </>

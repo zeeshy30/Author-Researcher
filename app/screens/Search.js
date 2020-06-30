@@ -81,7 +81,7 @@ export default class Search extends React.Component {
                     fontColor={colors.inputText}
                     lightTheme
                     containerStyle={{
-                        backgroundColor: 'white',
+                        backgroundColor: '#F2F3F4',
                         padding: 0,
                         width: '90%',
                         margin: 20,
