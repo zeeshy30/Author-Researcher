@@ -65,6 +65,7 @@ export default class Search extends React.Component {
                     summary: reference.summary,
                     rating: reference.rating,
                     views: reference.views,
+                    likeBy: reference.likeBy,
                     images: reference.imagesURL,
                     authorID: reference.authorDetails.docID,
                     authorName: reference.authorDetails.fullName,

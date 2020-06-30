@@ -41,7 +41,7 @@ export default QuoteTile = props => {
                     readonly
                 />
 
-                {props.showReviewButton &&
+                {props.isNotAuthor &&
                     <>
                         <Icon
                             style={{ marginLeft: 5 }}

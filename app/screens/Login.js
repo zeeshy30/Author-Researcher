@@ -34,25 +34,23 @@ export default class Login extends Component {
         Actions.signup()
     }
 
-    Login = () => {
+    Login = async () => {
         if (this.state.email === '' || this.state.password === '') {
             Alert.alert('Enter details to Login!')
             return;
         }
-
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(this.state.email, this.state.password)
-            .then(res => {
-                firebase.firestore().collection('Users').doc(res.user.uid).get()
-                    .then(doc => {
-                        const details = doc.data();
-                        details.docID = doc.id;
-                        AsyncStorage.setItem('loginDetails', JSON.stringify(details));
-                    });
-                Actions.dashboard();
-            })
-            .catch(error => alert(error));
+        try {
+            const res = await firebase
+                .auth()
+                .signInWithEmailAndPassword(this.state.email, this.state.password);
+            const doc = await firebase.firestore().collection('Users').doc(res.user.uid).get()
+            const details = doc.data();
+            details.docID = doc.id;
+            await AsyncStorage.setItem('loginDetails', JSON.stringify(details));
+            Actions.dashboard();
+        } catch (err) {
+            alert(err);
+        };
     }
 
     render() {

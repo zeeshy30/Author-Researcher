@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors, fontSizes } from '../BaseStyles';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default Dashboard = () => {
+    const [userDetails, setUserDetails] = useState({});
+    AsyncStorage.getItem('loginDetails').then(det => {
+        setUserDetails(JSON.parse(det));
+    })
     return (
         <View style={styles.container}>
             <TouchableOpacity
                 style={styles.ResearcherButton}
-                onPress={() => Actions.authorcontrolpanel()}
+                onPress={() => Actions.authorcontrolpanel(userDetails)}
             >
 
                 <Text style={styles.signupButton}>Author</Text>

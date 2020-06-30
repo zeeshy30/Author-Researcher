@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from 'react-nati
 import { Rating } from 'react-native-ratings';
 import Icons from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import Communications from 'react-native-communications';
 import { SliderBox } from "react-native-image-slider-box";
 
@@ -18,7 +19,9 @@ export default ReferenceTile = props => {
     const [showQuotes, setShowQuote] = useState(false);
     const [showRatingDialog, setShowRatingDialog] = useState(false);
     const [rating, setRating] = useState(props.rating);
-    const showReviewButton = props.userID !== props.authorID;
+    const [likeBy, setLikeBy] = useState(props.likeBy);
+    const [like, setLike] = useState(props.likeBy.includes(props.userID));
+    const isNotAuthor = props.userID !== props.authorID;
 
     const addRating = (refID, userID, ratingGiven) => {
         const rate = {}
@@ -37,9 +40,36 @@ export default ReferenceTile = props => {
         return sum / Object.keys(rating).length;
     };
 
+    const showOrHideQuote = async () => {
+        if (!showQuotes && isNotAuthor) {
+            firebase.firestore().collection('References').doc(props.id).update({
+                views: [...props.views, props.userID],
+            });
+        }
+        setShowQuote(!showQuotes);
+    };
+
+    const updateLikes = async () => {
+
+        if (like) {
+            const fitlered = likeBy.filter(val => val != props.userID)
+            firebase.firestore().collection('References').doc(props.id).update({
+                likeBy: fitlered,
+            });
+            setLikeBy(fitlered);
+        } else {
+            firebase.firestore().collection('References').doc(props.id).update({
+                likeBy: [...likeBy, props.userID],
+            });
+            setLikeBy([...likeBy, props.userID]);
+        }
+        setLike(!like);
+    }
+
+
     return (
         <View style={styles.tileContainer}>
-            <TouchableOpacity style={styles.row} onPress={() => setShowQuote(!showQuotes)}>
+            <TouchableOpacity style={styles.row} onPress={showOrHideQuote}>
                 {!showQuotes && <Rating
                     type='custom'
                     tintColor='#FFE6CD'
@@ -50,6 +80,12 @@ export default ReferenceTile = props => {
                     readonly
                 />}
                 <View style={styles.col}>
+                    {isNotAuthor && !showQuotes && <AntIcon
+                        style={{ marginRight: 5 }}
+                        name={like ? "like1" : "like2"}
+                        size={17}
+                        onPress={updateLikes}
+                    />}
                     <Icons
                         style={{ marginRight: 5 }}
                         name='email'
@@ -60,7 +96,7 @@ export default ReferenceTile = props => {
                     <Icons name='controller-play' color='orange' size={17} />
                 </View>
                 <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.title} ({props.authorName}) </Text>
-                {(showReviewButton && !showQuotes) && (<>
+                {(isNotAuthor && !showQuotes) && (<>
                     <Icon
                         style={{ marginLeft: 5 }}
                         name='rate-review'
@@ -96,7 +132,7 @@ export default ReferenceTile = props => {
                         key={index}
                         {...quote}
                         userID={props.userID}
-                        showReviewButton={showReviewButton} />
+                        isNotAuthor={isNotAuthor} />
                 }
                 ))
             }
