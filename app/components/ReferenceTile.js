@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Communications from 'react-native-communications';
 import { SliderBox } from "react-native-image-slider-box";
+import { colors } from '../BaseStyles';
 
 
 import firebase from '@react-native-firebase/app';
@@ -72,7 +73,7 @@ export default ReferenceTile = props => {
             <TouchableOpacity style={styles.row} onPress={showOrHideQuote}>
                 {!showQuotes && <Rating
                     type='custom'
-                    tintColor='#FFE6CD'
+                    tintColor={colors.tileBackgroundColor}
                     imageSize={16}
                     showRating={false}
                     fractions={1}
@@ -143,12 +144,21 @@ export default ReferenceTile = props => {
 const styles = StyleSheet.create({
     tileContainer: {
         width: '90%',
-        backgroundColor: '#FFE6CD',
+        backgroundColor: colors.tileBackgroundColor,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#000',
         padding: 10,
-        margin: 20,
+        margin: 15,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+
+        elevation: 4,
     },
     row: {
         width: '100%',
@@ -164,7 +174,7 @@ const styles = StyleSheet.create({
     },
     detailBox: {
         width: '30%',
-        backgroundColor: '#FFCE9B',
+        backgroundColor: colors.tileContentColor,
         maxHeight: 120,
         borderRadius: 10,
         borderWidth: 1,

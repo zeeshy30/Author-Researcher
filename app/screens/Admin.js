@@ -88,8 +88,8 @@ export default class Admin extends React.Component {
     }
 
     getRatingOfAuthors = () => {
-        return this.state.authors.map(author =>
-            <Text style={styles.text}> {author.fullName} : {this.getRatingOfAuthor(author.id)}</Text>
+        return this.state.authors.map((author, i) =>
+            <Text key={i} style={styles.text}> {author.fullName} : {this.getRatingOfAuthor(author.id)}</Text>
         );
     }
 
@@ -107,8 +107,8 @@ export default class Admin extends React.Component {
     }
 
     getViewsOfAuthors = () => {
-        return this.state.authors.map(author =>
-            <Text style={styles.text}> {author.fullName} : {this.getViewsOfAuthor(author.id)}</Text>
+        return this.state.authors.map((author, i) =>
+            <Text key={i} style={styles.text}> {author.fullName} : {this.getViewsOfAuthor(author.id)}</Text>
         );
     }
 
@@ -126,14 +126,14 @@ export default class Admin extends React.Component {
     }
 
     getLikesOfAuthors = () => {
-        return this.state.authors.map(author =>
-            <Text style={styles.text}> {author.fullName} : {this.getLikesOfAuthor(author.id)}</Text>
+        return this.state.authors.map((author, i) =>
+            <Text key={i} style={styles.text}> {author.fullName} : {this.getLikesOfAuthor(author.id)}</Text>
         );
     }
 
     getLikesOfReferences = () => {
-        return this.state.references.map(reference =>
-            <Text style={styles.text}> {reference.title} : {this.getLikesOfReference(reference.id)}</Text>
+        return this.state.references.map((reference, i) =>
+            <Text key={i} style={styles.text}> {reference.title} : {this.getLikesOfReference(reference.id)}</Text>
         );
     }
 

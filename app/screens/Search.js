@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchBar } from 'react-native-elements';
-import { Text, ScrollView, StyleSheet } from 'react-native';
+import { Text, ScrollView, StyleSheet, View } from 'react-native';
 import { colors, fontSizes } from '../BaseStyles';
 import ReferenceTile from '../components/ReferenceTile';
 
@@ -112,33 +112,40 @@ export default class Search extends React.Component {
         })
 
         return (
-            <ScrollView style={styles.container}>
-                <SearchBar
-                    placeholder="Search"
-                    onChangeText={this.updateSearch}
-                    value={search}
-                    fontColor={colors.inputText}
-                    lightTheme
-                    containerStyle={{
-                        backgroundColor: '#F2F3F4',
-                        padding: 0,
-                        width: '90%',
-                        margin: 20,
-                    }}
-                />
-                <Dropdown
-                    containerStyle={styles.dropdownStyle}
-                    pickerStyle={styles.pickerStyle}
-                    label='Search By'
-                    data={[{ value: 'Author' }, { value: 'Reference' }, { value: 'Quote' }]}
-                    onChangeText={value => this.setState({ filterBy: value })}
-                />
-
-                {References.length
-                    ? (filteredReferences.map((ref, index) =>
-                        <ReferenceTile key={index} {...ref} userID={userID} />))
-                    : (<LoadingScreen />)}
-            </ScrollView>
+            <>
+                <View style={styles.container}>
+                    <SearchBar
+                        placeholder="Search"
+                        onChangeText={this.updateSearch}
+                        value={search}
+                        fontColor={colors.inputText}
+                        lightTheme
+                        containerStyle={{
+                            backgroundColor: '#F2F3F4',
+                            padding: 0,
+                            width: '90%',
+                            marginVertical: 10,
+                            alignSelf: 'center',
+                            // marginLeft: 20,
+                        }}
+                    />
+                    <Dropdown
+                        containerStyle={styles.dropdownStyle}
+                        pickerStyle={styles.pickerStyle}
+                        label='Search By'
+                        data={[{ value: 'Author' }, { value: 'Reference' }, { value: 'Quote' }]}
+                        onChangeText={value => this.setState({ filterBy: value })}
+                    />
+                    <ScrollView>
+                    {
+                        References.length
+                            ? (filteredReferences.map((ref, index) =>
+                                <ReferenceTile key={index} {...ref} userID={userID} />))
+                            : (<LoadingScreen />)
+                    }
+                    </ScrollView>
+                </View>
+            </>
         );
     }
 }
@@ -147,6 +154,7 @@ const styles = StyleSheet.create({
     container:
     {
         flex: 1,
+        position: 'relative',
         paddingTop: 10,
     },
     searchbox: {
@@ -154,24 +162,20 @@ const styles = StyleSheet.create({
         fontWeight: '300',
         width: '100%',
         borderRadius: 8,
-        marginTop: 20,
+        marginTop: 10,
         marginHorizontal: 20,
     },
     dropdownStyle: {
         width: '90%',
         backgroundColor: 'white',
-        marginBottom: 20,
-        marginHorizontal: 20,
-        fontSize: 30,
-        fontWeight: 'bold',
+        marginBottom: 10,
+        borderBottomWidth: 0.5,
+        alignSelf: 'center',
     },
     pickerStyle: {
         width: 390,
-        borderRadius: 25,
+        borderEndWidth: 0.25,
         backgroundColor: 'white',
-        paddingHorizontal: 16,
         marginVertical: 10,
-        fontSize: 30,
-        fontWeight: 'bold',
     },
 });

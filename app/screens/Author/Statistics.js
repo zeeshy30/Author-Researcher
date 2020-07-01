@@ -72,14 +72,14 @@ export default class Statistics extends Component {
     }
 
     getNumberOfViewsPerReference = () => {
-        return this.state.references.map(ref =>
-            <Text style={styles.text}> {ref.title} : {ref.views.length}</Text>
+        return this.state.references.map((ref, i) =>
+            <Text key={i} style={styles.text}> {ref.title} : {ref.views.length}</Text>
         );
     }
 
     getNumberOfQuotesPerReference = () => {
-        return this.state.references.map(ref =>
-            <Text style={styles.text}> {ref.title} : {ref.quotes.length}</Text>
+        return this.state.references.map((ref, i) =>
+            <Text key={i} style={styles.text}> {ref.title} : {ref.quotes.length}</Text>
         );
     }
 
@@ -113,7 +113,7 @@ export default class Statistics extends Component {
                             onPress={() => this.setState({ showQuotesPerReference: !showQuotesPerReference, showViewsPerReference: false })}
                         >
                             <Text style={{ fontSize: fontSizes.large }}>{
-                                showQuotesPerReference ? 'Hide' : 'Show'} Quotes Per Reference <Icon name={showQuotesPerReference? 'up' : 'down'} size={20} />
+                                showQuotesPerReference ? 'Hide' : 'Show'} Quotes Per Reference <Icon name={showQuotesPerReference ? 'up' : 'down'} size={20} />
                             </Text>
                             {showQuotesPerReference && this.getNumberOfQuotesPerReference()}
                         </TouchableOpacity>

@@ -3,6 +3,8 @@ import { StyleSheet, View, ScrollView, Text } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import { colors } from '../BaseStyles';
+
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/firestore';
 
@@ -33,7 +35,7 @@ export default QuoteTile = props => {
             <View style={styles.row}>
                 <Rating
                     type='custom'
-                    tintColor='#FFE6CD'
+                    tintColor={colors.tileBackgroundColor}
                     imageSize={16}
                     showRating={false}
                     fractions={1}
@@ -78,10 +80,10 @@ export default QuoteTile = props => {
 const styles = StyleSheet.create({
     tileContainer: {
         width: '90%',
-        backgroundColor: '#FFE6CD',
+        backgroundColor: colors.tileBackgroundColor,
         padding: 5,
         margin: 5,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     row: {
         width: '100%',
@@ -89,16 +91,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 5,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     col: {
         marginRight: 10,
         marginLeft: 10,
         flexDirection: 'row',
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     detailBox: {
-        backgroundColor: '#FFCE9B',
+        backgroundColor: colors.tileContentColor,
         flex: 1,
         borderRadius: 10,
         borderWidth: 1,
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
         padding: 2.5,
         marginLeft: 5,
         zIndex: 999,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     price: {
         backgroundColor: 'grey',
@@ -116,6 +118,6 @@ const styles = StyleSheet.create({
         borderColor: '#000',
         padding: 2.5,
         marginLeft: 5,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     }
 });
