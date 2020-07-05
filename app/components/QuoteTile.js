@@ -102,9 +102,9 @@ const styles = StyleSheet.create({
     detailBox: {
         backgroundColor: colors.tileContentColor,
         flex: 1,
-        borderRadius: 10,
+        borderRadius: 2,
         borderWidth: 1,
-        borderColor: '#000',
+        borderColor: '#D7D7D7',
         padding: 2.5,
         marginLeft: 5,
         zIndex: 999,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     price: {
         backgroundColor: 'grey',
         maxHeight: 30,
-        borderRadius: 10,
+        borderRadius: 2,
         borderWidth: 1,
         borderColor: '#000',
         padding: 2.5,

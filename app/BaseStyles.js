@@ -1,8 +1,8 @@
 export const colors = {
     button: '#4f83cc',
     inputText: "#002f6c",
-    tileBackgroundColor: '#E1F5FE',
-    tileContentColor: '#B3E5FC',
+    tileBackgroundColor: '#FAFAFA',
+    tileContentColor: '#F5F5F5',
 }
 
 export const fontSizes = {

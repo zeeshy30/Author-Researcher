@@ -7,10 +7,14 @@ import ReferenceTile from '../components/ReferenceTile';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/storage';
 import '@react-native-firebase/firestore';
+// import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Dropdown } from 'react-native-material-dropdown';
 import LoadingScreen from '../components/LoadingScreen';
 
+
+
+// const adUnitId = 'ca-app-pub-1664078423005467~4447351282';
 
 export default class Search extends React.Component {
     constructor(props) {
@@ -137,13 +141,26 @@ export default class Search extends React.Component {
                         onChangeText={value => this.setState({ filterBy: value })}
                     />
                     <ScrollView>
-                    {
-                        References.length
-                            ? (filteredReferences.map((ref, index) =>
-                                <ReferenceTile key={index} {...ref} userID={userID} />))
-                            : (<LoadingScreen />)
-                    }
+                        {
+                            References.length
+                                ? (filteredReferences.map((ref, index) =>
+                                    <ReferenceTile key={index} {...ref} userID={userID} />))
+                                : (<LoadingScreen />)
+                        }
                     </ScrollView>
+                    {/* <BannerAd
+                        unitId={TestIds.BANNER}
+                        // size={BannerAdSize.SMART_BANNER}
+                        requestOptions={{
+                            requestNonPersonalizedAdsOnly: true,
+                        }}
+                        onAdLoaded={() => {
+                            console.log('Advert loaded');
+                        }}
+                        onAdFailedToLoad={(error) => {
+                            console.error('Advert failed to load: ', error);
+                        }}
+                    /> */}
                 </View>
             </>
         );
@@ -169,7 +186,7 @@ const styles = StyleSheet.create({
         width: '90%',
         backgroundColor: 'white',
         marginBottom: 10,
-        borderBottomWidth: 0.5,
+        // borderBottomWidth: 0.5,
         alignSelf: 'center',
     },
     pickerStyle: {
@@ -177,5 +194,6 @@ const styles = StyleSheet.create({
         borderEndWidth: 0.25,
         backgroundColor: 'white',
         marginVertical: 10,
+        alignSelf: 'center'
     },
 });

@@ -87,16 +87,17 @@ export default ReferenceTile = props => {
                         size={17}
                         onPress={updateLikes}
                     />}
+                    <AntIcon name='play' color='#A8A8A8' size={17} />
                     <Icons
-                        style={{ marginRight: 5 }}
+                        style={{ marginLeft: 5 }}
                         name='email'
                         color='orange'
                         size={17}
                         onPress={() => Communications.email([props.authorEmail], null, null, 'Demo Subject', 'Demo Content for the mail')}
                     />
-                    <Icons name='controller-play' color='orange' size={17} />
                 </View>
-                <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.title} ({props.authorName}) </Text>
+                <Text style={styles.referenceTitle}> {props.title} </Text>
+                <Text style={{ color: '#808080', fontWeight: 'bold', fontSize: 17 }}> {props.authorName} </Text>
                 {(isNotAuthor && !showQuotes) && (<>
                     <Icon
                         style={{ marginLeft: 5 }}
@@ -120,11 +121,11 @@ export default ReferenceTile = props => {
                         sliderBoxHeight={120}
                         images={props.images}
                     />
-                    <ScrollView style={styles.detailBox}>
+                    <ScrollView style={styles.detailBox} contentContainerStyle={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.authorBio}</Text>
 
                     </ScrollView>
-                    <ScrollView style={styles.detailBox}>
+                    <ScrollView style={styles.detailBox} contentContainerStyle={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ flex: 1, flexWrap: 'wrap' }}> {props.summary}</Text>
 
                     </ScrollView>
@@ -145,9 +146,9 @@ const styles = StyleSheet.create({
     tileContainer: {
         width: '90%',
         backgroundColor: colors.tileBackgroundColor,
-        borderRadius: 10,
+        borderRadius: 2,
         borderWidth: 1,
-        borderColor: '#000',
+        borderColor: '#F7F7F7',
         padding: 10,
         margin: 15,
         shadowColor: "#000",
@@ -176,10 +177,17 @@ const styles = StyleSheet.create({
         width: '30%',
         backgroundColor: colors.tileContentColor,
         maxHeight: 120,
-        borderRadius: 10,
+        borderRadius: 2,
         borderWidth: 1,
-        borderColor: '#000',
+        borderColor: '#D7D7D7',
         padding: 5,
         marginLeft: 2.5,
-    }
+    },
+    referenceTitle: {
+        flex: 1,
+        flexWrap: 'wrap',
+        color: '#A0A0A0',
+        fontWeight: 'bold',
+        fontSize: 17,
+    },
 });
