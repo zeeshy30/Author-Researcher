@@ -70,7 +70,8 @@ export default ReferenceTile = props => {
 
     return (
         <View style={styles.tileContainer}>
-            <TouchableOpacity style={styles.row} onPress={showOrHideQuote}>
+            <Text onPress={showOrHideQuote} style={{ ...styles.referenceTitle, alignSelf: 'center' }}> {props.title} </Text>
+            <View style={styles.row}>
                 {!showQuotes && <Rating
                     type='custom'
                     tintColor={colors.tileBackgroundColor}
@@ -80,13 +81,28 @@ export default ReferenceTile = props => {
                     startingValue={totalRating()}
                     readonly
                 />}
-                <View style={styles.col}>
-                    {isNotAuthor && !showQuotes && <AntIcon
-                        style={{ marginRight: 5 }}
-                        name={like ? "like1" : "like2"}
-                        size={17}
-                        onPress={updateLikes}
-                    />}
+                <View style={{ ...styles.col }}>
+                    {(isNotAuthor && !showQuotes) && (<>
+                        <Icon
+                            style={{ marginRight: 5 }}
+                            name='rate-review'
+                            color='orange'
+                            onPress={() => setShowRatingDialog(true)}
+                            size={17}
+                        />
+                        <RatingDialog
+                            showDialog={showRatingDialog}
+                            closeDialog={() => setShowRatingDialog(false)}
+                            initialValue={rating[props.userID] ? rating[props.userID] : 0}
+                            onSubmit={rating => addRating(props.id, props.userID, rating)}
+                        />
+                        {<AntIcon
+                            style={{ marginRight: 5 }}
+                            name={like ? "like1" : "like2"}
+                            size={17}
+                            onPress={updateLikes}
+                        />}
+                    </>)}
                     <AntIcon name='play' color='#A8A8A8' size={17} />
                     <Icons
                         style={{ marginLeft: 5 }}
@@ -96,24 +112,8 @@ export default ReferenceTile = props => {
                         onPress={() => Communications.email([props.authorEmail], null, null, 'Demo Subject', 'Demo Content for the mail')}
                     />
                 </View>
-                <Text style={styles.referenceTitle}> {props.title} </Text>
                 <Text style={{ color: '#808080', fontWeight: 'bold', fontSize: 17 }}> {props.authorName} </Text>
-                {(isNotAuthor && !showQuotes) && (<>
-                    <Icon
-                        style={{ marginLeft: 5 }}
-                        name='rate-review'
-                        color='orange'
-                        onPress={() => setShowRatingDialog(true)}
-                        size={17}
-                    />
-                    <RatingDialog
-                        showDialog={showRatingDialog}
-                        closeDialog={() => setShowRatingDialog(false)}
-                        initialValue={rating[props.userID] ? rating[props.userID] : 0}
-                        onSubmit={rating => addRating(props.id, props.userID, rating)}
-                    />
-                </>)}
-            </TouchableOpacity>
+            </View>
             {showQuotes === false
                 ? (<View style={styles.row}>
                     <SliderBox
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         width: '100%',
         maxHeight: 150,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         marginTop: 5,
     },
     col: {

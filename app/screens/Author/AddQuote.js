@@ -42,6 +42,11 @@ export default class AddQuote extends Component {
     }
 
     save = () => {
+        const { quoteIdea, quotation, price, bookPage } = this.state;
+        if (quoteIdea === '' || quotation === '' || price === '' || bookPage === '') {
+            alert('Please fill all fields');
+            return;
+        }
         this.setState({ processing: true });
         firebase.firestore().collection('Quotes').add({
             ...this.state,
@@ -49,7 +54,10 @@ export default class AddQuote extends Component {
             likedBy: [],
         }).then(doc => {
             this.props.onAddQuote(doc.id, this.clearState);
-        })
+        }).catch(err => {
+            this.setState({ processing: false });
+            alert(err);
+        });
     }
 
     clearState = () => {

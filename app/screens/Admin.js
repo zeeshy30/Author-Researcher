@@ -1,9 +1,6 @@
 import React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Dropdown } from 'react-native-material-dropdown';
-import { registerCustomIconType } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/AntDesign';
-
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
 
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/firestore';
@@ -19,10 +16,6 @@ export default class Admin extends React.Component {
             references: [],
             quotes: [],
             authors: [],
-            showAuthorRatings: false,
-            showAuthorViews: false,
-            showAuthorLikes: false,
-            showReferenceLikes: false,
         }
     }
 
@@ -80,7 +73,6 @@ export default class Admin extends React.Component {
 
     getRatingOfAuthor = id => {
         const author = this.state.authors.filter(author => author.id === id);
-
         const refRatings = author[0].references.map(refId =>
             this.getRatingOfReference(refId)
         );
@@ -88,8 +80,14 @@ export default class Admin extends React.Component {
     }
 
     getRatingOfAuthors = () => {
-        return this.state.authors.map((author, i) =>
-            <Text key={i} style={styles.text}> {author.fullName} : {this.getRatingOfAuthor(author.id)}</Text>
+        const data = this.state.authors.map(author => [author.fullName, this.getRatingOfAuthor(author.id)])
+        return (
+            <View style={styles.tableContainer}>
+                <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
+                    <Row data={['Author', 'Ratings']} style={styles.tableHead} textStyle={styles.tableText} />
+                    <Rows data={data} textStyle={styles.tableText} />
+                </Table>
+            </View>
         );
     }
 
@@ -107,8 +105,14 @@ export default class Admin extends React.Component {
     }
 
     getViewsOfAuthors = () => {
-        return this.state.authors.map((author, i) =>
-            <Text key={i} style={styles.text}> {author.fullName} : {this.getViewsOfAuthor(author.id)}</Text>
+        const data = this.state.authors.map(author => [author.fullName, this.getViewsOfAuthor(author.id)])
+        return (
+            <View style={styles.tableContainer}>
+                <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
+                    <Row data={['Author', 'Views']} style={styles.tableHead} textStyle={styles.tableText} />
+                    <Rows data={data} textStyle={styles.tableText} />
+                </Table>
+            </View>
         );
     }
 
@@ -126,69 +130,49 @@ export default class Admin extends React.Component {
     }
 
     getLikesOfAuthors = () => {
-        return this.state.authors.map((author, i) =>
-            <Text key={i} style={styles.text}> {author.fullName} : {this.getLikesOfAuthor(author.id)}</Text>
+        const data = this.state.authors.map(author => [author.fullName, this.getLikesOfAuthor(author.id)])
+        return (
+            <View style={styles.tableContainer}>
+                <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
+                    <Row data={['Author', 'Likes']} style={styles.tableHead} textStyle={styles.tableText} />
+                    <Rows data={data} textStyle={styles.tableText} />
+                </Table>
+            </View>
         );
     }
 
     getLikesOfReferences = () => {
-        return this.state.references.map((reference, i) =>
-            <Text key={i} style={styles.text}> {reference.title} : {this.getLikesOfReference(reference.id)}</Text>
+        const data = this.state.references.map(ref => [ref.title, this.getLikesOfReference(ref.id)])
+        return (
+            <View style={styles.tableContainer}>
+                <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
+                    <Row data={['Reference', 'Likes']} style={styles.tableHead} textStyle={styles.tableText} />
+                    <Rows data={data} textStyle={styles.tableText} />
+                </Table>
+            </View>
         );
     }
 
     render() {
         const {
-            showAuthorRatings,
-            showAuthorViews,
-            showAuthorLikes,
-            showReferenceLikes,
             loading,
         } = this.state;
 
         return (
             <>
                 {loading ? <LoadingScreen /> :
-                    <View >
+                    <ScrollView >
                         <Text style={styles.text}>Number of Authors : {this.state.authors.length}</Text>
                         <Text style={styles.text}>    Number of References: {this.state.references.length} </Text>
-                        <TouchableOpacity
-                            style={styles.dropdownStyle}
-                            onPress={() => this.setState({ showAuthorRatings: !showAuthorRatings, showAuthorViews: false, showAuthorLikes: false, showReferenceLikes: false })}
-                        >
-                            <Text style={{ fontSize: fontSizes.large }}>{
-                                showAuthorRatings ? 'Hide' : 'Show'} Authors Rating <Icon name={showAuthorRatings ? 'up' : 'down'} size={20} />
-                            </Text>
-                            {showAuthorRatings && this.getRatingOfAuthors()}
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.dropdownStyle}
-                            onPress={() => this.setState({ showAuthorViews: !showAuthorViews, showAuthorRatings: false, showAuthorLikes: false, showReferenceLikes: false })}
-                        >
-                            <Text style={{ fontSize: fontSizes.large }}>{
-                                showAuthorViews ? 'Hide' : 'Show'} Authors Views <Icon name={showAuthorViews ? 'up' : 'down'} size={20} />
-                            </Text>
-                            {showAuthorViews && this.getViewsOfAuthors()}
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.dropdownStyle}
-                            onPress={() => this.setState({ showAuthorLikes: !showAuthorLikes, showAuthorRatings: false, showAuthorViews: false, showReferenceLikes: false })}
-                        >
-                            <Text style={{ fontSize: fontSizes.large }}>{
-                                showAuthorLikes ? 'Hide' : 'Show'} Authors Likes <Icon name={showAuthorLikes ? 'up' : 'down'} size={20} />
-                            </Text>
-                            {showAuthorLikes && this.getLikesOfAuthors()}
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.dropdownStyle}
-                            onPress={() => this.setState({ showReferenceLikes: !showReferenceLikes, showAuthorRatings: false, showAuthorViews: false, showAuthorLikes: false })}
-                        >
-                            <Text style={{ fontSize: fontSizes.large }}>{
-                                showReferenceLikes ? 'Hide' : 'Show'} References Likes <Icon name={showReferenceLikes ? 'up' : 'down'} size={20} />
-                            </Text>
-                            {showReferenceLikes && this.getLikesOfReferences()}
-                        </TouchableOpacity>
-                    </View>
+                        <Text style={styles.tableTitle}>Authors Rating </Text>
+                        {this.getRatingOfAuthors()}
+                        <Text style={styles.tableTitle}>Authors Views </Text>
+                        {this.getViewsOfAuthors()}
+                        <Text style={styles.tableTitle}>Authors Likes </Text>
+                        {this.getLikesOfAuthors()}
+                        <Text style={styles.tableTitle}> References Likes </Text>
+                        {this.getLikesOfReferences()}
+                    </ScrollView>
                 }
             </>
         )
@@ -196,8 +180,29 @@ export default class Admin extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    tableContainer: {
+        flex: 1,
+        backgroundColor: 'white',
+        margin: 15,
+        marginTop: 0,
+    },
+    tableHead: {
+        height: 40,
+        backgroundColor: '#f1f8ff'
+    },
+    tableText: {
+        margin: 6
+    },
+    tableTitle: {
+        fontSize: fontSizes.normal,
+        margin: 15,
+        marginBottom: 0,
+    },
 
     text: {
         width: '100%',
@@ -207,13 +212,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    dropdownStyle: {
-        width: '100%',
-        alignSelf: 'center',
-        alignItems: 'center',
-        backgroundColor: '#08B4C5',
-        marginTop: 10,
-        fontSize: fontSizes.large,
     },
 });

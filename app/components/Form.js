@@ -18,7 +18,7 @@ export default Form = React.forwardRef((props, ref) => {
             placeholderTextColor={colors.inputText}
             secureTextEntry={props.secureTextEntry}
             selectionColor="#fff"
-            keyboardType={props.placeholder === "Email" ? "email-address" : "default"}
+            keyboardType={props.keyboardType || "default"}
             onSubmitEditing={props.onSubmitEditing}
             value={props.value}
             ref={ref}
@@ -37,15 +37,15 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:'#F2F3F4',
+        backgroundColor: '#F2F3F4',
         opacity: 0.5,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     inputBox: {
         width: 300,
         borderRadius: 25,
         paddingHorizontal: 16,
-        backgroundColor:'#F2F3F4',
+        backgroundColor: '#F2F3F4',
         fontSize: fontSizes.normal,
         marginVertical: 10,
 

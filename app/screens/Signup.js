@@ -42,6 +42,10 @@ export default class Signup extends Component {
             date: '',
             imageName: '',
             imageURI: '',
+            country: '',
+            city: '',
+            phoneNumber: '',
+            pageNum: 1,
         }
     }
 
@@ -77,7 +81,10 @@ export default class Signup extends Component {
             qualification,
             date,
             imageName,
-            imageURI
+            imageURI,
+            country,
+            city,
+            phoneNumber,
         } = this.state;
 
         if (password !== confirmPassword) {
@@ -89,6 +96,7 @@ export default class Signup extends Component {
         }
 
         this.setState({ processing: true });
+
         let fileRef = null;
         if (imageName != '')
             fileRef = firebase.storage().ref(email + '-' + imageName);
@@ -111,6 +119,9 @@ export default class Signup extends Component {
                         language,
                         qualification,
                         dateOfBirth: date,
+                        phoneNumber,
+                        city,
+                        country,
                         imageName: imageName === '' ? '' : (email + '-' + imageName),
                     });
                     Actions.initialscreen();
@@ -161,89 +172,129 @@ export default class Signup extends Component {
                 ? <LoadingScreen /> : (
                     <ScrollView style={styles.contentContainer}>
                         <View style={styles.formContainer}>
-                            <Form
-                                placeholder="Full Name"
-                                onUpdate={this.setName}
-                                onSubmitEditing={() => this.email.focus()}
-                                ref={(input) => this.fullName = input}
-                                value={this.state.fullName}
-                            />
-                            <Textarea
-                                placeholder="Bio"
-                                onUpdate={val => this.setState({ bio: val })}
-                                value={this.state.bio}
-                            />
-                            <DatePicker
-                                style={styles.datePickerStyle}
-                                date={this.state.date}
-                                mode="date"
-                                placeholder="Select Date of Birth"
-                                format="YYYY-MM-DD"
-                                confirmBtnText="Confirm"
-                                cancelBtnText="Cancel"
-                                customStyles={{
-                                    dateIcon: {
-                                        position: 'absolute',
-                                        left: 0,
-                                        top: 4,
-                                        marginLeft: 0
-                                    },
-                                    dateInput: {
-                                        border: 0,
-                                        marginLeft: 36
-                                    }
-                                }}
-                                onDateChange={(date) => { this.setState({ date: date }) }}
-                            />
-                            <Dropdown
-                                containerStyle={styles.dropdownStyle}
-                                pickerStyle={styles.pickerStyle}
-                                label='Gender'
-                                data={[{ value: 'Male' }, { value: 'Female' }]}
-                                onChangeText={value => this.setState({ gender: value })}
-                            />
-                            <Form
-                                placeholder="Email"
-                                onUpdate={this.setEmail}
-                                onSubmitEditing={() => this.password.focus()}
-                                ref={(input) => this.email = input}
-                                value={this.state.email}
-                            />
+                            {this.state.pageNum === 1 && (
+                                <>
+                                    <Form
+                                        placeholder="Full Name"
+                                        onUpdate={this.setName}
+                                        onSubmitEditing={() => this.email.focus()}
+                                        ref={(input) => this.fullName = input}
+                                        value={this.state.fullName}
+                                    />
+                                    <Form
+                                        placeholder="Email"
+                                        onUpdate={this.setEmail}
+                                        onSubmitEditing={() => this.password.focus()}
+                                        keyboardType="email-address"
+                                        ref={(input) => this.email = input}
+                                        value={this.state.email}
+                                    />
+                                    <Form
+                                        placeholder="Password"
+                                        secureTextEntry={true}
+                                        onUpdate={this.setPassword}
+                                        onSubmitEditing={() => this.confirmPassword.focus()}
+                                        ref={(input) => this.password = input}
+                                        value={this.state.password}
+                                    />
+                                    <Form
+                                        placeholder="Confirm Password"
+                                        secureTextEntry={true}
+                                        onUpdate={this.setConfirmPassword}
+                                        onSubmitEditing={() => this.qualification.focus()}
+                                        ref={(input) => this.confirmPassword = input}
+                                        value={this.state.confirmPassword}
+                                    />
+                                    <Icons name='collections' size={20} onPress={this.uploadPicture} />
+                                    <Text style={{ fontSize: 16 }}>
+                                        {this.state.imageName === '' ? 'Upload Profile Picture' : this.state.imageName}
+                                    </Text>
 
-                            <Form
-                                placeholder="Password"
-                                secureTextEntry={true}
-                                onUpdate={this.setPassword}
-                                onSubmitEditing={() => this.confirmPassword.focus()}
-                                ref={(input) => this.password = input}
-                                value={this.state.password}
-                            />
-                            <Form
-                                placeholder="Confirm Password"
-                                secureTextEntry={true}
-                                onUpdate={this.setConfirmPassword}
-                                onSubmitEditing={() => this.qualification.focus()}
-                                ref={(input) => this.confirmPassword = input}
-                                value={this.state.confirmPassword}
-                            />
-                            <Form
-                                placeholder="Qualifcation"
-                                onUpdate={val => this.setState({ qualification: val })}
-                                onSubmitEditing={() => this.language.focus()}
-                                ref={(input) => this.qualification = input}
-                                value={this.state.qualification}
-                            />
-                            <Form
-                                placeholder="Language"
-                                onUpdate={val => this.setState({ language: val })}
-                                ref={(input) => this.language = input}
-                                value={this.state.language}
-                            />
-                            <Icons name='collections' size={20} onPress={this.uploadPicture} />
-                            <Text style={{ fontSize: 16 }}>
-                                {this.state.imageName === '' ? 'Upload Profile Picture' : this.state.imageName}
-                            </Text>
-                            <Button onPress={this.SignUp} text="Sign up" />
+                                    <Button onPress={() => this.setState({ pageNum: 2 })} text='Next' />
+
+                                </>)}
+                            {this.state.pageNum === 2 && (
+                                <>
+                                    <Textarea
+                                        placeholder="Bio"
+                                        onUpdate={val => this.setState({ bio: val })}
+                                        value={this.state.bio}
+                                    />
+                                    <Dropdown
+                                        containerStyle={styles.dropdownStyle}
+                                        pickerStyle={styles.pickerStyle}
+                                        label='Gender'
+                                        data={[{ value: 'Male' }, { value: 'Female' }]}
+                                        onChangeText={value => this.setState({ gender: value })}
+                                    />
+
+                                    <DatePicker
+                                        style={styles.datePickerStyle}
+                                        date={this.state.date}
+                                        mode="date"
+                                        placeholder="Select Date of Birth"
+                                        format="YYYY-MM-DD"
+                                        confirmBtnText="Confirm"
+                                        cancelBtnText="Cancel"
+                                        customStyles={{
+                                            dateIcon: {
+                                                position: 'absolute',
+                                                left: 0,
+                                                top: 4,
+                                                marginLeft: 0
+                                            },
+                                            dateInput: {
+                                                border: 0,
+                                                marginLeft: 36
+                                            }
+                                        }}
+                                        onDateChange={(date) => { this.setState({ date: date }) }}
+                                    />
+                                    <Button onPress={() => this.setState({ pageNum: 3 })} text='Next' />
+                                    <Button onPress={() => this.setState({ pageNum: 1 })} text='Back' />
+                                </>)}
+                            {this.state.pageNum === 3 && (
+                                <>
+                                    <Form
+                                        placeholder="Qualifcation"
+                                        onUpdate={val => this.setState({ qualification: val })}
+                                        onSubmitEditing={() => this.language.focus()}
+                                        ref={(input) => this.qualification = input}
+                                        value={this.state.qualification}
+                                    />
+                                    <Form
+                                        placeholder="Language"
+                                        onUpdate={val => this.setState({ language: val })}
+                                        ref={(input) => this.language = input}
+                                        onSubmitEditing={() => this.phoneNumber.focus()}
+                                        value={this.state.language}
+                                    />
+                                    <Form
+                                        placeholder="Phone Number"
+                                        onUpdate={val => this.setState({ phoneNumber: val })}
+                                        onSubmitEditing={() => this.country.focus()}
+                                        ref={(input) => this.phoneNumber = input}
+                                        value={this.state.phoneNumber}
+                                        keyboardType="phone-pad"
+                                    />
+                                    <Form
+                                        placeholder="Country"
+                                        onUpdate={val => this.setState({ country: val })}
+                                        onSubmitEditing={() => this.city.focus()}
+                                        ref={(input) => this.country = input}
+                                        value={this.state.country}
+                                    />
+                                    <Form
+                                        placeholder="City"
+                                        onUpdate={val => this.setState({ city: val })}
+                                        ref={(input) => this.city = input}
+                                        value={this.state.city}
+                                    />
+
+                                    <Button onPress={() => this.setState({ pageNum: 2 })} text='Back' />
+                                    <Button onPress={this.SignUp} text="Sign up" />
+                                </>
+                            )}
                         </View>
 
                         <View style={styles.signupTextCont}>
@@ -259,6 +310,7 @@ export default class Signup extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white'

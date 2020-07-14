@@ -13,11 +13,40 @@ import '@react-native-firebase/firestore';
 import Form from '../../components/Form';
 import Textarea from '../../components/Textarea';
 import Button from '../../components/Button';
-import Menu from '../../components/Menu';
 import AddQuote from './AddQuote';
+import FIcon from 'react-native-vector-icons/Feather';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
+
+export default ReferenceEditPage = props => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name="Add Reference"
+                component={AddReference}
+                options={{
+                    headerLeft: () => (
+                        <FIcon
+                            name='menu'
+                            color='#000'
+                            size={26}
+                            style={{ marginLeft: 10 }}
+                            onPress={() => props.navigation.openDrawer()}
+                        />
+                    ),
+                    headerStyle: {
+                        backgroundColor: '#eee',
+                    }
+                }}
+            />
+        </Stack.Navigator>
+
+    );
+}
 
 
-export default class AddReference extends Component {
+class AddReference extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,7 +60,6 @@ export default class AddReference extends Component {
             fileURI: '',
             imagesNameURI: {},
             quotes: [],
-
         }
     }
 
@@ -39,11 +67,9 @@ export default class AddReference extends Component {
         if (this.state.saving)
             return;
         try {
-            this.setState({ saving: true });
 
             const {
                 userID,
-
                 title,
                 referenceSummary,
                 fileName,
@@ -57,11 +83,12 @@ export default class AddReference extends Component {
                 quotes === [] ||
                 fileName === '' ||
                 Object.keys(imagesNameURI).length === 0) {
-                alert('Please Fill all the fields');
+                alert('Please fill all the fields');
                 return;
             }
 
 
+            this.setState({ saving: true });
 
             let docName = title + '/' + userID + '-' + fileName;
             let fileRef = firebase.storage().ref(docName);
@@ -186,7 +213,6 @@ export default class AddReference extends Component {
     render() {
         return (
             <>
-                <Menu navigation={this.props.navigation} />
                 <Spinner
                     visible={this.state.saving}
                     textContent={'Saving...'}

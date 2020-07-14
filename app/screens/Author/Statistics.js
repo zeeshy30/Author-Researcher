@@ -1,25 +1,51 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import Menu from '../../components/Menu';
-import { Dropdown } from 'react-native-material-dropdown';
-import Icon from 'react-native-vector-icons/AntDesign';
-
+import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import FIcon from 'react-native-vector-icons/Feather';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
+import { Table, Row, Rows } from 'react-native-table-component';
+
 import { fontSizes } from '../../BaseStyles';
 import LoadingScreen from '../../components/LoadingScreen';
 
+const Stack = createStackNavigator();
 
-export default class Statistics extends Component {
+export default Stat = props => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name="Statistics"
+                component={Statistics}
+                options={{
+                    headerLeft: () => (
+                        <FIcon
+                            name='menu'
+                            color='#000'
+                            size={26}
+                            style={{ marginLeft: 10 }}
+                            onPress={() => props.navigation.openDrawer()}
+                        />
+                    ),
+                    headerStyle: {
+                        backgroundColor: '#eee',
+                    }
+                }}
+            />
+        </Stack.Navigator>
+
+    );
+}
+
+
+class Statistics extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
             references: [],
             quotes: [],
-            showViewsPerReference: false,
-            showQuotesPerReference: false,
         }
     }
 
@@ -72,14 +98,26 @@ export default class Statistics extends Component {
     }
 
     getNumberOfViewsPerReference = () => {
-        return this.state.references.map((ref, i) =>
-            <Text key={i} style={styles.text}> {ref.title} : {ref.views.length}</Text>
+        const data = this.state.references.map(ref => [ref.title, ref.views.length]);
+        return (
+            <View style={styles.tableContainer}>
+                <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
+                    <Row data={['Reference', 'Views']} style={styles.tableHead} textStyle={styles.tableText} />
+                    <Rows data={data} textStyle={styles.tableText} />
+                </Table>
+            </View>
         );
     }
 
     getNumberOfQuotesPerReference = () => {
-        return this.state.references.map((ref, i) =>
-            <Text key={i} style={styles.text}> {ref.title} : {ref.quotes.length}</Text>
+        const data = this.state.references.map(ref => [ref.title, ref.quotes.length]);
+        return (
+            <View style={styles.tableContainer}>
+                <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
+                    <Row data={['Reference', 'Number of Quotes']} style={styles.tableHead} textStyle={styles.tableText} />
+                    <Rows data={data} textStyle={styles.tableText} />
+                </Table>
+            </View>
         );
     }
 
@@ -90,35 +128,19 @@ export default class Statistics extends Component {
     }
 
     render() {
-        const { showViewsPerReference, showQuotesPerReference } = this.state;
         return (
             <>
-                <Menu navigation={this.props.navigation} />
-                {this.state.loading ? <LoadingScreen /> :
-                    <View >
+                {this.state.loading ? <LoadingScreen /> : (
+                    <ScrollView >
                         <Text style={styles.text}>Number of References : {this.numOfReferences()}</Text>
                         <Text style={styles.text}>Number of Views : {this.getNumberOfViews()} </Text>
                         <Text style={styles.text}>Number of Quotes : {this.getNumberOfQuotes()}</Text>
-                        <TouchableOpacity
-                            style={styles.dropdownStyle}
-                            onPress={() => this.setState({ showViewsPerReference: !showViewsPerReference, showQuotesPerReference: false })}
-                        >
-                            <Text style={{ fontSize: fontSizes.large }}>{
-                                showViewsPerReference ? 'Hide' : 'Show'} Views Per Reference <Icon name={showViewsPerReference ? 'up' : 'down'} size={20} />
-                            </Text>
-                            {showViewsPerReference && this.getNumberOfViewsPerReference()}
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.dropdownStyle}
-                            onPress={() => this.setState({ showQuotesPerReference: !showQuotesPerReference, showViewsPerReference: false })}
-                        >
-                            <Text style={{ fontSize: fontSizes.large }}>{
-                                showQuotesPerReference ? 'Hide' : 'Show'} Quotes Per Reference <Icon name={showQuotesPerReference ? 'up' : 'down'} size={20} />
-                            </Text>
-                            {showQuotesPerReference && this.getNumberOfQuotesPerReference()}
-                        </TouchableOpacity>
-                    </View>
-                }
+
+                        <Text style={styles.tableTitle}> Views Per Reference </Text>
+                        {this.getNumberOfViewsPerReference()}
+                        <Text style={styles.tableTitle}> Quotes Per Reference </Text>
+                        {this.getNumberOfQuotesPerReference()}
+                    </ScrollView>)}
             </>
         )
     }
@@ -126,24 +148,35 @@ export default class Statistics extends Component {
 
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-
-
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    tableContainer: {
+        flex: 1,
+        backgroundColor: 'white',
+        margin: 15,
+        marginTop: 0,
+    },
+    tableHead: {
+        height: 40,
+        backgroundColor: '#f1f8ff'
+    },
+    tableText: {
+        margin: 6
+    },
+    tableTitle: {
+        fontSize: fontSizes.normal,
+        margin: 15,
+        marginBottom: 0,
+    },
     text: {
         width: '100%',
         fontSize: fontSizes.large,
         marginTop: 10,
-        backgroundColor: 'white',
         textAlign: 'center',
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    dropdownStyle: {
-        width: '100%',
-        alignSelf: 'center',
-        alignItems: 'center',
-        backgroundColor: '#08B4C5',
-        marginTop: 10,
-        fontSize: fontSizes.large,
     },
 });

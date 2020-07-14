@@ -22,6 +22,7 @@ export default textarea = props => {
 const styles = StyleSheet.create({
     textareaContainer: {
         width: 300,
+        height: 130,
         backgroundColor: '#F2F3F4',
         borderRadius: 25,
         paddingHorizontal: 16,
@@ -31,9 +32,9 @@ const styles = StyleSheet.create({
     },
     textarea: {
         textAlignVertical: 'top',  // hack android
-        height: 170,
+        height: 130,
         fontSize: fontSizes.normal,
-        color:'#000000',
+        color: '#000000',
         backgroundColor: '#F2F3F4',
         opacity: 1
     },
