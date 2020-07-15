@@ -32,6 +32,10 @@ export default class Login extends Component {
         this.setState({ password: val });
     }
 
+    forgotPassword() {
+        Actions.forgotpassword();
+    }
+
     signup() {
         Actions.signup()
     }
@@ -80,6 +84,7 @@ export default class Login extends Component {
                                 onUpdate={this.setEmail}
                                 onSubmitEditing={() => this.password.focus()}
                                 ref={(input) => this.email = input}
+                                keyboardType="email-address"
                                 value={this.state.email}
                             />
                             <Form
@@ -97,6 +102,7 @@ export default class Login extends Component {
                             <Text style={styles.signupText}>Dont have an account yet? </Text>
                             <TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}>Signup</Text></TouchableOpacity>
                         </View>
+                        <TouchableOpacity onPress={this.forgotPassword}><Text style={styles.forgotPassword}>Forgot Password?</Text></TouchableOpacity>
                     </View>
                 )}
         </>
@@ -127,11 +133,17 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         textAlign: 'center'
     },
+    forgotPassword: {
+        color: colors.button,
+        fontSize: fontSizes.normal,
+        fontWeight: '500',
+        paddingBottom: 16,
+    },
     signupTextCont: {
         flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'flex-end',
-        paddingVertical: 16,
+        paddingTop: 16,
         flexDirection: 'row',
     },
     signupText: {

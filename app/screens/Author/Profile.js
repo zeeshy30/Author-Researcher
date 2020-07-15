@@ -88,7 +88,9 @@ class Profile extends Component {
             <>
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Image style={styles.avatar} source={{ uri: imageUrl || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} />
+                        <View style={styles.avatarContainer}>
+                            <Image style={styles.avatar} source={{ uri: imageUrl || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} />
+                        </View>
                         <View style={styles.personalDetails}>
                             <Text style={styles.name}>{fullName}</Text>
                             <Text style={styles.info}>{email}</Text>
@@ -125,15 +127,20 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         height: 170,
     },
+    avatarContainer: {
+        width: '35%',
+    },
     avatar: {
         width: 130,
         height: 130,
         borderRadius: 63,
-        marginLeft: 10
+        marginLeft: 10,
+        marginRight: 10,
     },
     personalDetails: {
+        width: '65%',
         alignSelf: 'center',
-        marginLeft: 70
+        justifyContent: 'center',
     },
     body: {
         marginTop: 20,
@@ -141,10 +148,13 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 28,
         fontWeight: 'bold',
+        alignSelf: 'center',
+        alignContent: 'center',
         color: "#000000",
         fontWeight: "600"
     },
     email: {
+        alignSelf: 'center',
         fontSize: 20,
         fontWeight: 'bold',
         color: "#000000",

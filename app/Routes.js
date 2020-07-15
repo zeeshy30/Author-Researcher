@@ -10,6 +10,7 @@ import AuthorDashboard from './screens/AuthorDashboard';
 import InitialScreen from './screens/InitialScreen';
 import Dashboard from './screens/Dashboard';
 import Search from './screens/Search';
+import ForgotPassword from './screens/ForgotPassword';
 import Admin from './screens/Admin';
 import Income from './screens/Income';
 import AdminDashboard from './screens/AdminDashboard';
@@ -43,6 +44,7 @@ export default Routes = () => {
                 <Scene key="login" component={Login} title="Login" type="replace" />
                 <Scene key="dashboard" component={Dashboard} title="Dashboard" type="replace" renderRightButton={signoutButton} />
                 <Scene key="signup" component={Signup} title="Sign up" type="replace" />
+                <Scene key="forgotpassword" component={ForgotPassword} title="Forgot Password" />
                 <Scene key="search" component={Search} title="Search" />
                 <Scene key="authorcontrolpanel" component={AuthorDashboard} title="Control Panel" hideNavBar />
                 <Scene key="admindashboard" component={AdminDashboard} title="AdminDashboard" />
