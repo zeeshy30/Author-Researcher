@@ -148,7 +148,7 @@ export default class Signup extends Component {
                 android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
                 ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
             }));
-            console.log(filePermission);
+
             if (filePermission === RESULTS.GRANTED) {
                 const res = await DocumentPicker.pick({
                     type: [DocumentPicker.types.images],
