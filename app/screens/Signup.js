@@ -201,7 +201,6 @@ export default class Signup extends Component {
                                         placeholder="Confirm Password"
                                         secureTextEntry={true}
                                         onUpdate={this.setConfirmPassword}
-                                        onSubmitEditing={() => this.qualification.focus()}
                                         ref={(input) => this.confirmPassword = input}
                                         value={this.state.confirmPassword}
                                     />

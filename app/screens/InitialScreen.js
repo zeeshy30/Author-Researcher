@@ -17,30 +17,23 @@ export default class InitialScreen extends Component {
         this.fetchData();
     }
 
-    fetchData = () => {
-        firebase.auth().onAuthStateChanged(async user => {
+    fetchData = async () => {
+        const user = firebase.auth().currentUser;
+        if (user) {
+            const doc = await firebase.firestore().collection('Users').doc(user.uid).get()
+            const details = doc.data();
+            details.docID = doc.id;
             try {
-                if (user) {
-                    const doc = await firebase.firestore().collection('Users').doc(user.uid).get()
-                    const details = doc.data();
-                    details.docID = doc.id;
-                    try {
-                        if (details.imageName)
-                            details.imageUrl = await firebase.storage()
-                                .ref(details.imageName)
-                                .getDownloadURL();
-                    } catch (err) { }
-                    await AsyncStorage.setItem('loginDetails', JSON.stringify(details));
-                    Actions.dashboard();
-                } else {
-                    Actions.login();
-                }
-            } catch (err) {
-                alert(err);
-                Actions.login();
-
-            }
-        });
+                if (details.imageName)
+                    details.imageUrl = await firebase.storage()
+                        .ref(details.imageName)
+                        .getDownloadURL();
+            } catch (err) { }
+            await AsyncStorage.setItem('loginDetails', JSON.stringify(details));
+            Actions.dashboard();
+        } else {
+            Actions.login();
+        }
     }
 
     render() {
