@@ -32,6 +32,7 @@ export default class InitialScreen extends Component {
             await AsyncStorage.setItem('loginDetails', JSON.stringify(details));
             Actions.dashboard();
         } else {
+            console.log('loggin');
             Actions.login();
         }
     }

@@ -6,8 +6,9 @@ import {
     View,
     TouchableOpacity,
     ScrollView,
-    PermissionsAndroid,
+    Platform,
 } from 'react-native';
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import DocumentPicker from 'react-native-document-picker';
 import { Actions } from 'react-native-router-flux';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -142,10 +143,13 @@ export default class Signup extends Component {
 
     uploadPicture = async () => {
         try {
-            const filePermission = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            );
-            if (filePermission === PermissionsAndroid.RESULTS.GRANTED) {
+
+            const filePermission = await request(Platform.select({
+                android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+                ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+            }));
+            console.log(filePermission);
+            if (filePermission === RESULTS.GRANTED) {
                 const res = await DocumentPicker.pick({
                     type: [DocumentPicker.types.images],
                 });

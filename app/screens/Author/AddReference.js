@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, PermissionsAndroid } from 'react-native';
+import { Text, View, StyleSheet, } from 'react-native';
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -148,10 +149,12 @@ class AddReference extends Component {
 
     uploadPicture = async () => {
         try {
-            const filePermission = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            );
-            if (filePermission === PermissionsAndroid.RESULTS.GRANTED) {
+            const filePermission = await request(Platform.select({
+                android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+                ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+            }));
+
+            if (filePermission === RESULTS.GRANTED) {
                 const results = await DocumentPicker.pickMultiple({
                     type: [DocumentPicker.types.images],
                 });
@@ -176,10 +179,12 @@ class AddReference extends Component {
 
     uploadReference = async () => {
         try {
-            const filePermission = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            );
-            if (filePermission === PermissionsAndroid.RESULTS.GRANTED) {
+            const filePermission = await request(Platform.select({
+                android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+                ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+            }));
+
+            if (filePermission === RESULTS.GRANTED) {
                 const res = await DocumentPicker.pick({
                     type: [DocumentPicker.types.allFiles],
                 });
